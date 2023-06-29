@@ -16,8 +16,8 @@ interface Thread {
   category: string;
   createdAt: string;
   ownerId: string;
-  upVotesBy: User[];
-  downVotesBy: User[];
+  upVotesBy: string[];
+  downVotesBy: string[];
   totalComments: number;
 }
 
