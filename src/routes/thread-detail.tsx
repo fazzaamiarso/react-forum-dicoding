@@ -1,8 +1,8 @@
 import { useGetThreadByIdQuery } from "@/api/thread";
 import parse from "html-react-parser";
 import { useParams } from "react-router-dom";
-import * as Avatar from "@radix-ui/react-avatar";
-import { ChevronUpIcon, ChevronDownIcon } from "@heroicons/react/20/solid";
+import { UserAvatar } from "@/components/user-avatar";
+import { VoteButton } from "@/components/vote-button";
 
 const ThreadDetail = (): JSX.Element => {
   const { threadId } = useParams();
@@ -10,24 +10,13 @@ const ThreadDetail = (): JSX.Element => {
 
   const { data } = useGetThreadByIdQuery(threadId, { skip: threadId === null });
 
+  if (data === undefined) return <div></div>; // TODO: Replace this with proper loading
+
   return (
     <div className="space-y-8">
       <div className="mb-8">
         <div className="mb-4 flex items-center gap-2">
-          <Avatar.Root>
-            <Avatar.Image
-              src={data?.owner.avatar}
-              alt={data?.owner.name}
-              className="aspect-square w-8 rounded-full"
-            />
-            <Avatar.Fallback>
-              {data?.owner?.name
-                .split(" ")
-                .slice(0, 2)
-                .map((word) => word.toUpperCase().charAt(0))
-                .join("")}
-            </Avatar.Fallback>
-          </Avatar.Root>
+          <UserAvatar imgSrc={data.owner.avatar} name={data.owner.name} />
           <div>
             <div className="text-sm font-semibold">{data?.owner.name}</div>
             <div className="text-xs">Posted on {data?.createdAt}</div>
@@ -42,24 +31,14 @@ const ThreadDetail = (): JSX.Element => {
         <ul>
           {data?.comments.map((comment) => {
             return (
-              <li>
-                <h4 className="font-semibold">{comment.owner.name}</h4>
-                <span className="text-xs">{comment.createdAt}</span>
-                <div className="flex items-start gap-4">
-                  <div className="flex flex-col items-center">
-                    <button>
-                      <ChevronUpIcon aria-hidden="true" className="w-4" />
-                    </button>
-                    <div className="text-sm">
-                      {comment.upVotesBy.length - comment.downVotesBy.length}
-                    </div>
-                    <button>
-                      <ChevronDownIcon aria-hidden="true" className="w-4" />
-                    </button>
-                  </div>
-                  <div className="text-sm">{parse(comment.content)}</div>
-                </div>
-              </li>
+              <CommentItem
+                key={comment.id}
+                content={comment.content}
+                downVotes={comment.downVotesBy.length}
+                upVotes={comment.upVotesBy.length}
+                createdAt={comment.createdAt}
+                name={comment.owner.name}
+              />
             );
           })}
         </ul>
@@ -74,3 +53,29 @@ const ThreadDetail = (): JSX.Element => {
 };
 
 export default ThreadDetail;
+
+interface CommentItemProps {
+  name: string;
+  createdAt: string;
+  upVotes: number;
+  downVotes: number;
+  content: string;
+}
+const CommentItem = ({
+  name,
+  createdAt,
+  upVotes,
+  downVotes,
+  content,
+}: CommentItemProps): JSX.Element => {
+  return (
+    <li>
+      <h4 className="font-semibold">{name}</h4>
+      <span className="text-xs">{createdAt}</span>
+      <div className="flex items-start gap-4">
+        <VoteButton upVotes={upVotes} downVotes={downVotes} />
+        <div className="text-sm">{parse(content)}</div>
+      </div>
+    </li>
+  );
+};

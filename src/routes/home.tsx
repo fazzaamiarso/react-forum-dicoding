@@ -1,8 +1,9 @@
 import parse from "html-react-parser";
 import { useGetAllThreadsQuery } from "@/api/thread";
 import { Link } from "react-router-dom";
-import * as Avatar from "@radix-ui/react-avatar";
-import { ChatBubbleLeftIcon, ChevronDownIcon, ChevronUpIcon } from "@heroicons/react/20/solid";
+import { ChatBubbleLeftIcon } from "@heroicons/react/20/solid";
+import { UserAvatar } from "@/components/user-avatar";
+import { VoteButton } from "@/components/vote-button";
 
 const Home = (): JSX.Element => {
   const { data } = useGetAllThreadsQuery();
@@ -13,20 +14,7 @@ const Home = (): JSX.Element => {
           return (
             <li key={thread.id} className="space-y-5 rounded-sm p-4 shadow-sm ring-1 ring-gray-200">
               <div className="mb-4 flex items-center gap-2">
-                <Avatar.Root>
-                  <Avatar.Image
-                    src={thread.owner.avatar}
-                    alt={thread.owner.name}
-                    className="aspect-square w-5 rounded-full"
-                  />
-                  <Avatar.Fallback>
-                    {thread.owner?.name
-                      .split(" ")
-                      .slice(0, 2)
-                      .map((word) => word.toUpperCase().charAt(0))
-                      .join("")}
-                  </Avatar.Fallback>
-                </Avatar.Root>
+                <UserAvatar imgSrc={thread.owner.avatar} name={thread.owner.name} />
                 <div className="text-xs">{thread.owner.name}</div>
                 <div className="text-xs">
                   {new Intl.DateTimeFormat("en-US", {
@@ -35,17 +23,10 @@ const Home = (): JSX.Element => {
                 </div>
               </div>
               <div className="flex w-full gap-4">
-                <div className="flex flex-col items-center">
-                  <button>
-                    <ChevronUpIcon aria-hidden="true" className="w-4" />
-                  </button>
-                  <div className="text-sm">
-                    {thread.upVotesBy.length - thread.downVotesBy.length}
-                  </div>
-                  <button>
-                    <ChevronDownIcon aria-hidden="true" className="w-4" />
-                  </button>
-                </div>
+                <VoteButton
+                  upVotes={thread.upVotesBy.length}
+                  downVotes={thread.downVotesBy.length}
+                />
                 <div className="space-y-4">
                   <h3 className="font-semibold">
                     <Link to={`threads/${thread.id}`}>{thread.title}</Link>
