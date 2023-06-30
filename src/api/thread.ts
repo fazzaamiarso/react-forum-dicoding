@@ -9,16 +9,33 @@ interface User {
   avatar: string;
 }
 
-interface Thread {
+interface Comment {
+  id: string;
+  content: string;
+  createdAt: string;
+  owner: Omit<User, "email">;
+  upVotesBy: string[];
+  downVotesBy: string[];
+}
+
+interface ThreadBase {
   id: string;
   title: string;
   body: string;
   category: string;
   createdAt: string;
-  ownerId: string;
   upVotesBy: string[];
   downVotesBy: string[];
+}
+
+interface Thread extends ThreadBase {
   totalComments: number;
+  ownerId: string;
+}
+
+interface ThreadDetail extends ThreadBase {
+  owner: Omit<User, "email">;
+  comments: Comment[];
 }
 
 export const threadApi = createApi({
@@ -31,7 +48,13 @@ export const threadApi = createApi({
         return rawResult.data.threads;
       },
     }),
+    getThreadById: builder.query<ThreadDetail, string>({
+      query: (threadId) => `threads/${threadId}`,
+      transformResponse: (rawResult: { data: { detailThread: ThreadDetail } }) => {
+        return rawResult.data.detailThread;
+      },
+    }),
   }),
 });
 
-export const { useGetAllThreadsQuery } = threadApi;
+export const { useGetAllThreadsQuery, useGetThreadByIdQuery } = threadApi;

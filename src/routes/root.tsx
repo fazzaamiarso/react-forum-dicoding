@@ -1,11 +1,9 @@
-import parse from "html-react-parser";
-import { useGetAllThreadsQuery } from "./api/thread";
 import { ArrowLeftOnRectangleIcon, Bars3Icon, XMarkIcon } from "@heroicons/react/20/solid";
 import * as Dialog from "@radix-ui/react-dialog";
 import clsx from "clsx";
+import { Link, Outlet } from "react-router-dom";
 
-function App(): JSX.Element {
-  const { data } = useGetAllThreadsQuery();
+const App = (): JSX.Element => {
   return (
     <>
       <header className="mx-auto w-11/12">
@@ -30,19 +28,19 @@ function App(): JSX.Element {
                 </div>
                 <ul className="space-y-6">
                   <li>
-                    <a href="#" className="w-full py-2 ">
+                    <Link to="/" className="w-full py-2 ">
                       Home
-                    </a>
+                    </Link>
                   </li>
                   <li>
-                    <a href="#" className="w-full py-2 ">
+                    <Link to="#" className="w-full py-2 ">
                       Leaderboard
-                    </a>
+                    </Link>
                   </li>
                   <li>
-                    <a href="#" className="w-full py-2 ">
+                    <Link to="#" className="w-full py-2 ">
                       Categories
-                    </a>
+                    </Link>
                   </li>
                 </ul>
                 <button className="mt-auto inline-flex items-center gap-3">
@@ -52,24 +50,16 @@ function App(): JSX.Element {
               </Dialog.Content>
             </Dialog.Portal>
           </Dialog.Root>
-          <h1 className="text-xl font-bold text-green-500">Giron</h1>
+          <h1 className="text-xl font-bold text-green-500">
+            <Link to="/">Giron</Link>
+          </h1>
         </div>
       </header>
-      <main className="mx-auto w-11/12">
-        <h2>Threads</h2>
-        <ul>
-          {data?.map((thread) => {
-            return (
-              <li key={thread.id}>
-                <h3>{thread.title}</h3>
-                <p>{parse(thread.body)}</p>
-              </li>
-            );
-          })}
-        </ul>
+      <main className="mx-auto my-8 w-11/12">
+        <Outlet />
       </main>
     </>
   );
-}
+};
 
 export default App;
