@@ -1,5 +1,5 @@
 import parse from "html-react-parser";
-import { useGetAllThreadsQuery } from "@/api/thread";
+import { useGetAllThreadsQuery } from "@/services/api/thread";
 import { Link } from "react-router-dom";
 import { ChatBubbleLeftIcon } from "@heroicons/react/20/solid";
 import { UserAvatar } from "@/components/user-avatar";

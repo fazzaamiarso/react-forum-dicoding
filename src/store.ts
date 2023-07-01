@@ -1,9 +1,11 @@
 import { configureStore } from "@reduxjs/toolkit";
-import { threadApi } from "@/api/thread";
-import { userApi } from "./api/user";
+import { threadApi } from "@/services/api/thread";
+import { userApi } from "./services/api/user";
+import authSlice from "./services/authSlice";
 
 export const store = configureStore({
   reducer: {
+    auth: authSlice,
     [threadApi.reducerPath]: threadApi.reducer,
     [userApi.reducerPath]: userApi.reducer,
   },

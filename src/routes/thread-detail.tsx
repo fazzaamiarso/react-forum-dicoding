@@ -1,4 +1,4 @@
-import { useGetThreadByIdQuery } from "@/api/thread";
+import { useGetThreadByIdQuery } from "@/services/api/thread";
 import parse from "html-react-parser";
 import { useParams } from "react-router-dom";
 import { UserAvatar } from "@/components/user-avatar";
