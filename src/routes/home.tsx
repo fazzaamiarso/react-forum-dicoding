@@ -14,7 +14,7 @@ const Home = (): JSX.Element => {
           return (
             <li key={thread.id} className="space-y-5 rounded-sm p-4 shadow-sm ring-1 ring-gray-200">
               <div className="mb-4 flex items-center gap-2">
-                <UserAvatar imgSrc={thread.owner.avatar} name={thread.owner.name} />
+                <UserAvatar imgSrc={thread.owner.avatar} name={thread.owner.name} size="sm" />
                 <div className="text-xs">{thread.owner.name}</div>
                 <div className="text-xs">
                   {new Intl.DateTimeFormat("en-US", {
