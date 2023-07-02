@@ -1,3 +1,4 @@
+import { UserCircleIcon } from "@heroicons/react/24/solid";
 import * as Avatar from "@radix-ui/react-avatar";
 
 interface Props {
@@ -11,11 +12,7 @@ export const UserAvatar = ({ imgSrc, name }: Props): JSX.Element => {
     <Avatar.Root>
       <Avatar.Image src={imgSrc} alt={name} className="aspect-square w-5 rounded-full" />
       <Avatar.Fallback>
-        {name
-          .split(" ")
-          .slice(0, 2)
-          .map((word) => word.toUpperCase().charAt(0))
-          .join("")}
+        <UserCircleIcon aria-hidden="true" className="aspect-square w-5" />
       </Avatar.Fallback>
     </Avatar.Root>
   );

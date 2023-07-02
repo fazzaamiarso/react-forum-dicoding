@@ -7,6 +7,8 @@ import { Provider } from "react-redux";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import Home from "./routes/home.tsx";
 import ThreadDetail from "./routes/thread-detail.tsx";
+import Register from "./routes/auth/register.tsx";
+import Login from "./routes/auth/login.tsx";
 
 const router = createBrowserRouter([
   {
@@ -21,6 +23,13 @@ const router = createBrowserRouter([
         path: "threads/:threadId",
         element: <ThreadDetail />,
       },
+    ],
+  },
+  {
+    path: "/auth",
+    children: [
+      { path: "/auth/register", element: <Register /> },
+      { path: "/auth/login", element: <Login /> },
     ],
   },
 ]);

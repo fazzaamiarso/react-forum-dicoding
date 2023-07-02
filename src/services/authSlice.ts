@@ -1,5 +1,6 @@
 import { type RootState } from "@/store";
-import { type PayloadAction, createSlice } from "@reduxjs/toolkit";
+import { createSlice } from "@reduxjs/toolkit";
+import { userApi } from "./api/user";
 
 interface User {
   id: string;
@@ -12,22 +13,29 @@ interface AuthState {
   user: User | null;
   token: string | null;
 }
+const initialToken = localStorage.getItem("giron-auth-token") ?? null;
 
 const authSlice = createSlice({
   name: "auth",
   // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
-  initialState: { user: null, token: null } as AuthState,
+  initialState: { user: null, token: initialToken } as AuthState,
   reducers: {
-    setUser: (state, { payload: { user } }: PayloadAction<{ user: User }>) => {
-      state.user = user;
+    logout: (state) => {
+      state.user = null;
+      state.token = null;
     },
-    setToken: (state, { payload: { token } }: PayloadAction<{ token: string }>) => {
-      state.token = token;
-    },
+  },
+  extraReducers: (builder) => {
+    builder.addMatcher(userApi.endpoints.login.matchFulfilled, (state, { payload }) => {
+      state.token = payload.token;
+    });
+    builder.addMatcher(userApi.endpoints.getOwnProfile.matchFulfilled, (state, { payload }) => {
+      state.user = payload;
+    });
   },
 });
 
-export const { setUser, setToken } = authSlice.actions;
+export const { logout } = authSlice.actions;
 
 export default authSlice.reducer;
 

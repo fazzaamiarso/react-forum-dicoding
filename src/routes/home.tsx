@@ -29,7 +29,9 @@ const Home = (): JSX.Element => {
                 />
                 <div className="space-y-4">
                   <h3 className="font-semibold">
-                    <Link to={`threads/${thread.id}`}>{thread.title}</Link>
+                    <Link to={`threads/${thread.id}`} className="line-clamp-2 break-all">
+                      {thread.title}
+                    </Link>
                   </h3>
                   <span className="p-1 text-xs ring-1">{thread.category}</span>
                   <div className="line-clamp-6 text-sm">{parse(thread.body)}</div>

@@ -1,6 +1,5 @@
 import { type RootState } from "@/store";
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
-import { setToken, setUser } from "../authSlice";
 
 const BASE_URL = "https://forum-api.dicoding.dev/v1/";
 
@@ -13,7 +12,16 @@ interface User {
 
 export const userApi = createApi({
   reducerPath: "userApi",
-  baseQuery: fetchBaseQuery({ baseUrl: BASE_URL }),
+  baseQuery: fetchBaseQuery({
+    baseUrl: BASE_URL,
+    prepareHeaders: (headers, { getState }) => {
+      const token = (getState() as RootState).auth.token;
+      if (token !== null) {
+        headers.set("Authorization", `Bearer ${token}`);
+      }
+      return headers;
+    },
+  }),
   endpoints: (builder) => ({
     getAllUsers: builder.query<User[], void>({
       query: () => "users",
@@ -22,47 +30,29 @@ export const userApi = createApi({
       },
     }),
     getOwnProfile: builder.query<User, void>({
-      queryFn: async (_args, { getState, dispatch }, _options, baseQuery) => {
-        const token = (getState() as RootState).auth.token;
-        if (token === null)
-          return {
-            error: {
-              error: "Internal server error!",
-              status: 403,
-              data: "Token must be provided",
-            },
-          };
-
-        const res = await baseQuery({
-          url: "users/me",
-          headers: { Authorization: `Bearer ${token}` },
-        });
-        const user = (res.data as { data: { user: User } }).data.user;
-
-        dispatch(setUser({ user }));
-
-        return { data: user };
+      query: () => "users/me",
+      transformResponse: (rawResult: { data: { user: User } }) => {
+        return rawResult.data.user;
       },
     }),
     register: builder.mutation<User, Omit<User, "id" | "avatar"> & { password: string }>({
       query: (userData) => ({ url: "register", method: "POST", body: userData }),
-    }),
-    login: builder.mutation<string, { email: string; password: string }>({
-      queryFn: async (credentials, { dispatch }, _options, baseQuery) => {
-        const res = await baseQuery({
-          url: "login",
-          method: "POST",
-          body: credentials,
-        });
-
-        const token = (res.data as { data: { token: string } }).data.token;
-
-        dispatch(setToken({ token }));
-
-        return { data: token };
+      transformResponse: (rawResult: { data: { user: User } }) => {
+        return rawResult.data.user;
       },
+    }),
+    login: builder.mutation<{ token: string }, { email: string; password: string }>({
+      query: (credentials) => ({
+        url: "login",
+        method: "POST",
+        body: credentials,
+      }),
+      transformResponse: (rawResult: { data: { token: string } }) => ({
+        token: rawResult.data.token,
+      }),
     }),
   }),
 });
 
-export const { useGetAllUsersQuery } = userApi;
+export const { useGetAllUsersQuery, useGetOwnProfileQuery, useLoginMutation, useRegisterMutation } =
+  userApi;

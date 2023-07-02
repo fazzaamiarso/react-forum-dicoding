@@ -1,9 +1,16 @@
+import { UserAvatar } from "@/components/user-avatar";
+import { useAppDispatch } from "@/hooks/store";
+import { useAuth } from "@/hooks/useAuth";
+import { logout } from "@/services/authSlice";
 import { ArrowLeftOnRectangleIcon, Bars3Icon, XMarkIcon } from "@heroicons/react/20/solid";
 import * as Dialog from "@radix-ui/react-dialog";
 import clsx from "clsx";
-import { Link, Outlet } from "react-router-dom";
+import { Link, Outlet, useNavigate } from "react-router-dom";
 
 const App = (): JSX.Element => {
+  const navigate = useNavigate();
+  const dispatch = useAppDispatch();
+  const { user } = useAuth();
   return (
     <>
       <header className="mx-auto w-11/12">
@@ -43,7 +50,13 @@ const App = (): JSX.Element => {
                     </Link>
                   </li>
                 </ul>
-                <button className="mt-auto inline-flex items-center gap-3">
+                <button
+                  className="mt-auto inline-flex items-center gap-3"
+                  onClick={() => {
+                    dispatch(logout());
+                    navigate("/auth/login");
+                  }}
+                >
                   <ArrowLeftOnRectangleIcon aria-hidden="true" className="aspect-square w-5" />{" "}
                   Logout
                 </button>
@@ -53,6 +66,7 @@ const App = (): JSX.Element => {
           <h1 className="text-xl font-bold text-green-500">
             <Link to="/">Giron</Link>
           </h1>
+          <UserAvatar imgSrc={user?.avatar ?? ""} name={user?.name ?? ""} />
         </div>
       </header>
       <main className="mx-auto my-8 w-11/12">
