@@ -1,27 +1,7 @@
-import { type RootState } from "@/store";
-import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
+import { baseApi } from "./base";
+import type { User } from "@/types";
 
-const BASE_URL = "https://forum-api.dicoding.dev/v1/";
-
-interface User {
-  id: string;
-  name: string;
-  email: string;
-  avatar: string;
-}
-
-export const userApi = createApi({
-  reducerPath: "userApi",
-  baseQuery: fetchBaseQuery({
-    baseUrl: BASE_URL,
-    prepareHeaders: (headers, { getState }) => {
-      const token = (getState() as RootState).auth.token;
-      if (token !== null) {
-        headers.set("Authorization", `Bearer ${token}`);
-      }
-      return headers;
-    },
-  }),
+export const userApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
     getAllUsers: builder.query<User[], void>({
       query: () => "users",

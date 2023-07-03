@@ -1,16 +1,31 @@
+/* eslint-disable @typescript-eslint/no-misused-promises */
 import { useGetThreadByIdQuery } from "@/services/api/thread";
 import parse from "html-react-parser";
 import { useParams } from "react-router-dom";
 import { UserAvatar } from "@/components/user-avatar";
 import { VoteButton } from "@/components/vote-button";
+import { type SubmitHandler, useForm } from "react-hook-form";
+import { useCreateCommentMutation } from "@/services/api/comment";
+
+interface FormData {
+  content: string;
+  threadId: string;
+}
 
 const ThreadDetail = (): JSX.Element => {
   const { threadId } = useParams();
   if (threadId === undefined) throw Error("threadId can't be undefined!");
 
   const { data } = useGetThreadByIdQuery(threadId, { skip: threadId === null });
+  const [createComment] = useCreateCommentMutation();
+  const { register, handleSubmit } = useForm<FormData>({ defaultValues: { threadId } });
 
   if (data === undefined) return <div></div>; // TODO: Replace this with proper loading
+
+  const onSubmit: SubmitHandler<FormData> = async (data) => {
+    await createComment(data);
+    console.log(data);
+  };
 
   return (
     <div className="space-y-8">
@@ -25,7 +40,7 @@ const ThreadDetail = (): JSX.Element => {
         <h2 className="text-3xl font-semibold">{data?.title}</h2>
         <span className="p-1 text-sm ring-1 ring-black">{data?.category}</span>
       </div>
-      <p>{parse(data?.body ?? "")}</p>
+      <div>{parse(data?.body ?? "")}</div>
       <section>
         <h3 className="font-semibold">Comments ({data?.comments.length})</h3>
         <ul>
@@ -42,9 +57,15 @@ const ThreadDetail = (): JSX.Element => {
             );
           })}
         </ul>
-        <form onSubmit={() => ""}>
-          <label htmlFor="comment">Add Comment</label>
-          <textarea name="comment" id="comment" rows={7} className="w-full resize-y rounded-sm" />
+        <form onSubmit={handleSubmit(onSubmit)}>
+          <input type="hidden" {...register("threadId")} />
+          <label htmlFor="contet">Add Comment</label>
+          <textarea
+            {...register("content", { required: true })}
+            id="content"
+            rows={7}
+            className="w-full resize-y rounded-sm"
+          />
           <button className="rounded-sm bg-black p-2 text-white">Submit</button>
         </form>
       </section>

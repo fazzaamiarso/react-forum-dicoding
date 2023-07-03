@@ -1,51 +1,8 @@
-import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { userApi } from "./user";
+import { baseApi } from "./base";
+import type { ThreadWithOwner, Thread, User, ThreadDetail } from "@/types";
 
-const BASE_URL = "https://forum-api.dicoding.dev/v1/";
-
-interface User {
-  id: string;
-  name: string;
-  email: string;
-  avatar: string;
-}
-
-interface Comment {
-  id: string;
-  content: string;
-  createdAt: string;
-  owner: Omit<User, "email">;
-  upVotesBy: string[];
-  downVotesBy: string[];
-}
-
-interface ThreadBase {
-  id: string;
-  title: string;
-  body: string;
-  category: string;
-  createdAt: string;
-  upVotesBy: string[];
-  downVotesBy: string[];
-}
-
-interface Thread extends ThreadBase {
-  totalComments: number;
-  ownerId: string;
-}
-
-interface ThreadWithOwner extends Thread {
-  owner: User;
-}
-
-interface ThreadDetail extends ThreadBase {
-  owner: Omit<User, "email">;
-  comments: Comment[];
-}
-
-export const threadApi = createApi({
-  reducerPath: "threadApi",
-  baseQuery: fetchBaseQuery({ baseUrl: BASE_URL }),
+export const threadApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
     getAllThreads: builder.query<ThreadWithOwner[], void>({
       queryFn: async (_args, api, _options, baseQuery) => {
@@ -83,6 +40,7 @@ export const threadApi = createApi({
       transformResponse: (rawResult: { data: { detailThread: ThreadDetail } }) => {
         return rawResult.data.detailThread;
       },
+      providesTags: (_result, _error, id) => [{ type: "Thread", id }],
     }),
   }),
 });
