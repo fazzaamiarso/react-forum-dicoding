@@ -18,13 +18,13 @@ const ThreadDetail = (): JSX.Element => {
 
   const { data } = useGetThreadByIdQuery(threadId, { skip: threadId === null });
   const [createComment] = useCreateCommentMutation();
-  const { register, handleSubmit } = useForm<FormData>({ defaultValues: { threadId } });
+  const { register, handleSubmit, resetField } = useForm<FormData>({ defaultValues: { threadId } });
 
   if (data === undefined) return <div></div>; // TODO: Replace this with proper loading
 
   const onSubmit: SubmitHandler<FormData> = async (data) => {
     await createComment(data);
-    console.log(data);
+    resetField("content");
   };
 
   return (

@@ -42,7 +42,22 @@ export const threadApi = baseApi.injectEndpoints({
       },
       providesTags: (_result, _error, id) => [{ type: "Thread", id }],
     }),
+    createThread: builder.mutation<
+      Thread,
+      {
+        title: string;
+        body: string;
+        category?: string;
+      }
+    >({
+      query: ({ title, body, category }) => ({
+        url: "threads",
+        method: "POST",
+        body: { title, body, category },
+      }),
+      invalidatesTags: ["Thread"],
+    }),
   }),
 });
 
-export const { useGetAllThreadsQuery, useGetThreadByIdQuery } = threadApi;
+export const { useGetAllThreadsQuery, useGetThreadByIdQuery, useCreateThreadMutation } = threadApi;

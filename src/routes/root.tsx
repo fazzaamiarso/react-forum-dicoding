@@ -86,21 +86,19 @@ const App = (): JSX.Element => {
                     "min-w-[150px] rounded-md bg-zinc-100 p-2 text-zinc-800 shadow-md"
                   )}
                 >
-                  <DropdownMenu.Item>
-                    <Link to="/thread/new" className="inline-flex w-full py-1 text-start text-sm">
+                  <DropdownMenu.Item asChild>
+                    <Link to="/threads/new" className="inline-flex w-full py-1 text-start text-sm">
                       Create Thread
                     </Link>
                   </DropdownMenu.Item>
-                  <DropdownMenu.Item>
-                    <button
-                      className="inline-flex w-full py-1 text-start text-sm"
-                      onClick={() => {
-                        dispatch(logout());
-                        navigate("/auth/login", { replace: true });
-                      }}
-                    >
-                      Logout
-                    </button>
+                  <DropdownMenu.Item
+                    className="inline-flex w-full py-1 text-start text-sm"
+                    onSelect={() => {
+                      dispatch(logout());
+                      navigate("/auth/login", { replace: true });
+                    }}
+                  >
+                    Logout
                   </DropdownMenu.Item>
                 </DropdownMenu.Content>
               </DropdownMenu.Portal>
