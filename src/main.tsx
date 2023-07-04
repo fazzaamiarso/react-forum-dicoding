@@ -12,6 +12,8 @@ import Login from "./routes/auth/login.tsx";
 import NewThread from "./routes/thread/new.tsx";
 import Leaderboard from "./routes/leaderboards.tsx";
 
+import "@fontsource-variable/open-sans";
+
 const router = createBrowserRouter([
   {
     path: "/",

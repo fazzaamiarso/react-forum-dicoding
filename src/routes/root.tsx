@@ -14,9 +14,9 @@ const App = (): JSX.Element => {
   const dispatch = useAppDispatch();
   const { user } = useAuth();
   return (
-    <>
+    <div className="font-open-sans">
       <GlobalLoadingBar />
-      <header className="mx-auto w-11/12">
+      <header className="mx-auto w-11/12 max-w-2xl">
         <div className="flex items-center gap-4 py-4">
           <Dialog.Root>
             <Dialog.Trigger>
@@ -63,11 +63,6 @@ const App = (): JSX.Element => {
                       Leaderboard
                     </Link>
                   </li>
-                  <li>
-                    <Link to="#" className="w-full py-2 ">
-                      Categories
-                    </Link>
-                  </li>
                 </ul>
               </Dialog.Content>
             </Dialog.Portal>
@@ -108,10 +103,10 @@ const App = (): JSX.Element => {
           )}
         </div>
       </header>
-      <main className="mx-auto my-8 w-11/12">
+      <main className="mx-auto my-8 w-11/12 max-w-2xl">
         <Outlet />
       </main>
-    </>
+    </div>
   );
 };
 
