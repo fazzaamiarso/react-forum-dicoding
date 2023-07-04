@@ -5,6 +5,7 @@ import type { ThreadWithOwner, Thread, User, ThreadDetail } from "@/types";
 export const threadApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
     getAllThreads: builder.query<ThreadWithOwner[], void>({
+      providesTags: ["Thread"],
       queryFn: async (_args, api, _options, baseQuery) => {
         const threadsPromise = await baseQuery("threads");
         const usersPromise = await api.dispatch(userApi.endpoints.getAllUsers.initiate());
@@ -57,7 +58,35 @@ export const threadApi = baseApi.injectEndpoints({
       }),
       invalidatesTags: ["Thread"],
     }),
+    upvoteThread: builder.mutation<void, string>({
+      query: (threadId) => ({
+        url: `threads/${threadId}/up-vote`,
+        method: "POST",
+      }),
+      invalidatesTags: ["Thread"],
+    }),
+    downvoteThread: builder.mutation<void, string>({
+      query: (threadId) => ({
+        url: `threads/${threadId}/down-vote`,
+        method: "POST",
+      }),
+      invalidatesTags: ["Thread"],
+    }),
+    neutralizeVoteThread: builder.mutation<void, string>({
+      query: (threadId) => ({
+        url: `threads/${threadId}/neutral-vote`,
+        method: "POST",
+      }),
+      invalidatesTags: ["Thread"],
+    }),
   }),
 });
 
-export const { useGetAllThreadsQuery, useGetThreadByIdQuery, useCreateThreadMutation } = threadApi;
+export const {
+  useGetAllThreadsQuery,
+  useGetThreadByIdQuery,
+  useCreateThreadMutation,
+  useDownvoteThreadMutation,
+  useNeutralizeVoteThreadMutation,
+  useUpvoteThreadMutation,
+} = threadApi;

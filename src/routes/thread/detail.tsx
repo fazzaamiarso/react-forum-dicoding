@@ -6,6 +6,7 @@ import { UserAvatar } from "@/components/user-avatar";
 import { VoteButton } from "@/components/vote-button";
 import { type SubmitHandler, useForm } from "react-hook-form";
 import { useCreateCommentMutation } from "@/services/api/comment";
+import type { User } from "@/types";
 
 interface FormData {
   content: string;
@@ -52,7 +53,7 @@ const ThreadDetail = (): JSX.Element => {
                 downVotes={comment.downVotesBy.length}
                 upVotes={comment.upVotesBy.length}
                 createdAt={comment.createdAt}
-                name={comment.owner.name}
+                owner={comment.owner}
               />
             );
           })}
@@ -76,14 +77,14 @@ const ThreadDetail = (): JSX.Element => {
 export default ThreadDetail;
 
 interface CommentItemProps {
-  name: string;
+  owner: Omit<User, "email">;
   createdAt: string;
   upVotes: number;
   downVotes: number;
   content: string;
 }
 const CommentItem = ({
-  name,
+  owner,
   createdAt,
   upVotes,
   downVotes,
@@ -91,8 +92,13 @@ const CommentItem = ({
 }: CommentItemProps): JSX.Element => {
   return (
     <li>
-      <h4 className="font-semibold">{name}</h4>
-      <span className="text-xs">{createdAt}</span>
+      <div className="flex items-center gap-4">
+        <UserAvatar imgSrc={owner.avatar} name={owner.name} />
+        <div>
+          <h4 className="font-semibold">{owner.name}</h4>
+          <span className="text-xs">{createdAt}</span>
+        </div>
+      </div>
       <div className="flex items-start gap-4">
         <VoteButton upVotes={upVotes} downVotes={downVotes} />
         <div className="text-sm">{parse(content)}</div>
