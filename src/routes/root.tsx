@@ -57,7 +57,7 @@ const App = (): JSX.Element => {
                     </Link>
                   </li>
                   <li>
-                    <Link to="#" className="w-full py-2 ">
+                    <Link to="/leaderboards" className="w-full py-2 ">
                       Leaderboard
                     </Link>
                   </li>

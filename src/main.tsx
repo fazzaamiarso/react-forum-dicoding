@@ -10,6 +10,7 @@ import ThreadDetail from "./routes/thread/detail.tsx";
 import Register from "./routes/auth/register.tsx";
 import Login from "./routes/auth/login.tsx";
 import NewThread from "./routes/thread/new.tsx";
+import Leaderboard from "./routes/leaderboards.tsx";
 
 const router = createBrowserRouter([
   {
@@ -19,6 +20,10 @@ const router = createBrowserRouter([
       {
         index: true,
         element: <Home />,
+      },
+      {
+        path: "leaderboards",
+        element: <Leaderboard />,
       },
       {
         path: "threads/:threadId",
