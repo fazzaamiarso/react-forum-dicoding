@@ -1,6 +1,6 @@
 import { userApi } from "./user";
 import { baseApi } from "./base";
-import type { ThreadWithOwner, Thread, User, ThreadDetail } from "@/types";
+import type { ThreadWithOwner, Thread, User, ThreadDetail, VoteType } from "@/types";
 
 export const threadApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
@@ -58,23 +58,9 @@ export const threadApi = baseApi.injectEndpoints({
       }),
       invalidatesTags: ["Thread"],
     }),
-    upvoteThread: builder.mutation<void, string>({
-      query: (threadId) => ({
-        url: `threads/${threadId}/up-vote`,
-        method: "POST",
-      }),
-      invalidatesTags: ["Thread"],
-    }),
-    downvoteThread: builder.mutation<void, string>({
-      query: (threadId) => ({
-        url: `threads/${threadId}/down-vote`,
-        method: "POST",
-      }),
-      invalidatesTags: ["Thread"],
-    }),
-    neutralizeVoteThread: builder.mutation<void, string>({
-      query: (threadId) => ({
-        url: `threads/${threadId}/neutral-vote`,
+    updateVoteThread: builder.mutation<void, { threadId: string; type: VoteType }>({
+      query: ({ threadId, type }) => ({
+        url: `threads/${threadId}/${type}`,
         method: "POST",
       }),
       invalidatesTags: ["Thread"],
@@ -86,7 +72,5 @@ export const {
   useGetAllThreadsQuery,
   useGetThreadByIdQuery,
   useCreateThreadMutation,
-  useDownvoteThreadMutation,
-  useNeutralizeVoteThreadMutation,
-  useUpvoteThreadMutation,
+  useUpdateVoteThreadMutation,
 } = threadApi;

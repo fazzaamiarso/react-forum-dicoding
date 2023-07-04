@@ -37,3 +37,5 @@ export interface ThreadDetail extends ThreadBase {
   owner: Omit<User, "email">;
   comments: Comment[];
 }
+
+export type VoteType = "neutral-vote" | "down-vote" | "up-vote";

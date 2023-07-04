@@ -1,39 +1,36 @@
 /* eslint-disable @typescript-eslint/no-misused-promises */
+import type { VoteType } from "@/types";
 import { TriangleDownIcon, TriangleUpIcon } from "@radix-ui/react-icons";
 import clsx from "clsx";
 
 interface Props {
   upVotes: number;
   downVotes: number;
-  neutralizeVote: () => Promise<void>;
-  upVote: () => Promise<void>;
-  downVote: () => Promise<void>;
+  updateVote: (type: VoteType) => Promise<void>;
   hasUpvoted: boolean;
   hasDownvoted: boolean;
 }
 export const VoteButton = ({
   upVotes,
   downVotes,
-  upVote,
-  downVote,
-  neutralizeVote,
+   updateVote,
   hasDownvoted,
   hasUpvoted,
 }: Props): JSX.Element => {
   const onUpvote = async (): Promise<void> => {
     if (hasUpvoted) {
-      await neutralizeVote();
+      await updateVote("neutral-vote");
       return;
     }
-    await upVote();
+    await updateVote("up-vote");
   };
 
   const onDownvote = async (): Promise<void> => {
     if (hasDownvoted) {
-      await neutralizeVote();
+      await updateVote("neutral-vote");
       return;
     }
-    await downVote();
+    await updateVote("down-vote");
   };
   return (
     <div className="flex flex-col items-center">

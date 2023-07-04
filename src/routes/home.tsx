@@ -1,10 +1,5 @@
 import parse from "html-react-parser";
-import {
-  useDownvoteThreadMutation,
-  useGetAllThreadsQuery,
-  useNeutralizeVoteThreadMutation,
-  useUpvoteThreadMutation,
-} from "@/services/api/thread";
+import { useGetAllThreadsQuery, useUpdateVoteThreadMutation } from "@/services/api/thread";
 import { Link } from "react-router-dom";
 import { ChatBubbleLeftIcon } from "@heroicons/react/20/solid";
 import { UserAvatar } from "@/components/user-avatar";
@@ -39,9 +34,7 @@ const ThreadItem = ({
   downVotesBy,
 }: ThreadWithOwner): JSX.Element => {
   const { user } = useAuth();
-  const [upVote] = useUpvoteThreadMutation();
-  const [downVote] = useDownvoteThreadMutation();
-  const [neutralizeVote] = useNeutralizeVoteThreadMutation();
+  const [updateVote] = useUpdateVoteThreadMutation();
 
   const hasUpvoted = user?.id === undefined ? false : upVotesBy.includes(user.id);
   const hasDownvoted = user?.id === undefined ? false : downVotesBy.includes(user.id);
@@ -63,14 +56,8 @@ const ThreadItem = ({
           downVotes={downVotesBy.length}
           hasUpvoted={hasUpvoted}
           hasDownvoted={hasDownvoted}
-          upVote={async () => {
-            await upVote(id);
-          }}
-          downVote={async () => {
-            await downVote(id);
-          }}
-          neutralizeVote={async () => {
-            await neutralizeVote(id);
+          updateVote={async (type) => {
+            await updateVote({ threadId: id, type });
           }}
         />
         <div className="space-y-4">
