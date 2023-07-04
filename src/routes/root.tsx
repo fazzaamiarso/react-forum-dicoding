@@ -7,6 +7,7 @@ import * as Dialog from "@radix-ui/react-dialog";
 import clsx from "clsx";
 import { Link, Outlet, useNavigate } from "react-router-dom";
 import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
+import GlobalLoadingBar from "@/components/loading-bar";
 
 const App = (): JSX.Element => {
   const navigate = useNavigate();
@@ -14,6 +15,7 @@ const App = (): JSX.Element => {
   const { user } = useAuth();
   return (
     <>
+      <GlobalLoadingBar />
       <header className="mx-auto w-11/12">
         <div className="flex items-center gap-4 py-4">
           <Dialog.Root>

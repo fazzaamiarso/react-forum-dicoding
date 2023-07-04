@@ -2,7 +2,9 @@ import { createListenerMiddleware, isAnyOf } from "@reduxjs/toolkit";
 import { userApi } from "./api/user";
 import { logout } from "./authSlice";
 import { threadApi } from "./api/thread";
-import { showLoading } from "react-redux-loading-bar";
+import { hideLoading, showLoading } from "./loadingSlice";
+import { leaderboardsApi } from "./api/leaderboards";
+import { commentApi } from "./api/comment";
 
 export const listenereMiddleware = createListenerMiddleware();
 
@@ -22,10 +24,28 @@ listenereMiddleware.startListening({
 
 listenereMiddleware.startListening({
   matcher: isAnyOf(
-    userApi.endpoints.getOwnProfile.matchPending,
-    threadApi.endpoints.getAllThreads.matchPending
+    ...Array.from(Object.values(userApi.endpoints).map((endpoint) => endpoint.matchPending)),
+    ...Array.from(
+      Object.values(leaderboardsApi.endpoints).map((endpoint) => endpoint.matchPending)
+    ),
+    ...Array.from(Object.values(commentApi.endpoints).map((endpoint) => endpoint.matchPending)),
+    ...Array.from(Object.values(threadApi.endpoints).map((endpoint) => endpoint.matchPending))
   ),
   effect: (_action, listenerApi) => {
     listenerApi.dispatch(showLoading());
+  },
+});
+
+listenereMiddleware.startListening({
+  matcher: isAnyOf(
+    ...Array.from(Object.values(userApi.endpoints).map((endpoint) => endpoint.matchFulfilled)),
+    ...Array.from(
+      Object.values(leaderboardsApi.endpoints).map((endpoint) => endpoint.matchFulfilled)
+    ),
+    ...Array.from(Object.values(commentApi.endpoints).map((endpoint) => endpoint.matchFulfilled)),
+    ...Array.from(Object.values(threadApi.endpoints).map((endpoint) => endpoint.matchFulfilled))
+  ),
+  effect: (_action, listenerApi) => {
+    listenerApi.dispatch(hideLoading());
   },
 });
