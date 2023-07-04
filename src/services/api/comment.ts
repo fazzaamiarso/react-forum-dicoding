@@ -1,4 +1,4 @@
-import type { Comment } from "@/types";
+import type { Comment, VoteType } from "@/types";
 import { baseApi } from "./base";
 
 export const commentApi = baseApi.injectEndpoints({
@@ -11,7 +11,17 @@ export const commentApi = baseApi.injectEndpoints({
       }),
       invalidatesTags: (_result, _error, { threadId }) => [{ type: "Thread", id: threadId }],
     }),
+    updateVoteComment: builder.mutation<
+      void,
+      { threadId: string; type: VoteType; commentId: string }
+    >({
+      query: ({ threadId, type, commentId }) => ({
+        url: `threads/${threadId}/comments/${commentId}/${type}`,
+        method: "POST",
+      }),
+      invalidatesTags: (_result, _error, { threadId }) => [{ type: "Thread", id: threadId }],
+    }),
   }),
 });
 
-export const { useCreateCommentMutation } = commentApi;
+export const { useCreateCommentMutation, useUpdateVoteCommentMutation } = commentApi;

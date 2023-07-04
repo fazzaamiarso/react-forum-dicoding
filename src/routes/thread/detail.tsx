@@ -5,8 +5,9 @@ import { useParams } from "react-router-dom";
 import { UserAvatar } from "@/components/user-avatar";
 import { VoteButton } from "@/components/vote-button";
 import { type SubmitHandler, useForm } from "react-hook-form";
-import { useCreateCommentMutation } from "@/services/api/comment";
-import type { User } from "@/types";
+import { useCreateCommentMutation, useUpdateVoteCommentMutation } from "@/services/api/comment";
+import type { Comment } from "@/types";
+import { useAuth } from "@/hooks/useAuth";
 
 interface FormData {
   content: string;
@@ -49,11 +50,13 @@ const ThreadDetail = (): JSX.Element => {
             return (
               <CommentItem
                 key={comment.id}
+                id={comment.id}
                 content={comment.content}
-                downVotes={comment.downVotesBy.length}
-                upVotes={comment.upVotesBy.length}
+                downVotesBy={comment.downVotesBy}
+                upVotesBy={comment.upVotesBy}
                 createdAt={comment.createdAt}
                 owner={comment.owner}
+                threadId={threadId}
               />
             );
           })}
@@ -76,20 +79,23 @@ const ThreadDetail = (): JSX.Element => {
 
 export default ThreadDetail;
 
-interface CommentItemProps {
-  owner: Omit<User, "email">;
-  createdAt: string;
-  upVotes: number;
-  downVotes: number;
-  content: string;
+interface CommentItemProps extends Comment {
+  threadId: string;
 }
 const CommentItem = ({
+  id,
   owner,
   createdAt,
-  upVotes,
-  downVotes,
+  upVotesBy,
+  downVotesBy,
   content,
+  threadId,
 }: CommentItemProps): JSX.Element => {
+  const { user } = useAuth();
+  const [updateVote] = useUpdateVoteCommentMutation();
+
+  const hasUpvoted = user?.id === undefined ? false : upVotesBy.includes(user.id);
+  const hasDownvoted = user?.id === undefined ? false : downVotesBy.includes(user.id);
   return (
     <li>
       <div className="flex items-center gap-4">
@@ -100,7 +106,15 @@ const CommentItem = ({
         </div>
       </div>
       <div className="flex items-start gap-4">
-        <VoteButton upVotes={upVotes} downVotes={downVotes} />
+        <VoteButton
+          hasUpvoted={hasUpvoted}
+          hasDownvoted={hasDownvoted}
+          upVotes={upVotesBy.length}
+          downVotes={downVotesBy.length}
+          updateVote={async (type) => {
+            await updateVote({ threadId, type, commentId: id });
+          }}
+        />
         <div className="text-sm">{parse(content)}</div>
       </div>
     </li>
