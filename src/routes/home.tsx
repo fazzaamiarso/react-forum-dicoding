@@ -6,16 +6,55 @@ import { UserAvatar } from "@/components/user-avatar";
 import { VoteButton } from "@/components/vote-button";
 import type { ThreadWithOwner } from "@/types";
 import { useAuth } from "@/hooks/useAuth";
+import * as ToggleGroup from "@radix-ui/react-toggle-group";
+import clsx from "clsx";
+import { useState } from "react";
 
 const Home = (): JSX.Element => {
-  const { data } = useGetAllThreadsQuery(undefined, {});
+  const [selectedCategory, setSelectedCategory] = useState<string>("");
+  const { threads, categories } = useGetAllThreadsQuery(undefined, {
+    selectFromResult: (result) => {
+      const categories = result.data?.map((thread) => thread.category) ?? [];
+      return { threads: result.data, categories };
+    },
+  });
+
+  const threadsByCategory =
+    selectedCategory === ""
+      ? threads
+      : threads?.filter((thread) => thread.category === selectedCategory);
+
   return (
-    <div>
-      <ul className="space-y-4">
-        {data?.map((thread) => {
-          return <ThreadItem key={thread.id} {...thread} />;
-        })}
-      </ul>
+    <div className="space-y-8">
+      <div>
+        <h2>Categories</h2>
+        <ToggleGroup.Root
+          type="single"
+          className="flex items-center gap-2"
+          onValueChange={setSelectedCategory}
+          value={selectedCategory}
+        >
+          {categories.map((category) => {
+            return (
+              <ToggleGroup.Item
+                key={category}
+                value={category}
+                className={clsx("p-1 text-sm ring-1 ring-black", "data-[state='on']:bg-zinc-200")}
+              >
+                {category}
+              </ToggleGroup.Item>
+            );
+          })}
+        </ToggleGroup.Root>
+      </div>
+      <div>
+        <h2>Threads</h2>
+        <ul className="space-y-4">
+          {threadsByCategory?.map((thread) => {
+            return <ThreadItem key={thread.id} {...thread} />;
+          })}
+        </ul>
+      </div>
     </div>
   );
 };
