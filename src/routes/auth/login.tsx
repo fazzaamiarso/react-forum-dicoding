@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/no-misused-promises */
+import TextField from "@/components/text-field";
 import { useLoginMutation } from "@/services/api/user";
 import { useForm, type SubmitHandler } from "react-hook-form";
 import { Link, useNavigate } from "react-router-dom";
@@ -22,34 +23,30 @@ const Login = (): JSX.Element => {
     <div className="h-screen">
       <div className="flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8">
         <div className="sm:mx-auto sm:w-full sm:max-w-sm">
-          <h2 className="mt-10 text-center text-2xl font-bold leading-9 tracking-tight text-emerald-400">
+          <h2 className="mt-10 text-center text-2xl font-bold leading-9 tracking-tight text-violet-400">
             Sign into your account
           </h2>
         </div>
 
         <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
           <form className="space-y-6" onSubmit={handleSubmit(onSubmit)}>
-            <div className="flex flex-col gap-2">
-              <label htmlFor="email">Email</label>
-              <input
-                type="email"
-                id="email"
-                autoComplete="email"
-                {...register("email", { required: true })}
-              />
-            </div>
-            <div className="flex flex-col gap-2">
-              <label htmlFor="password">Password</label>
-              <input
-                type="password"
-                autoComplete="current-password"
-                id="password"
-                {...register("password", { required: true, minLength: 6 })}
-              />
-            </div>
+            <TextField
+              {...register("email", { required: true })}
+              type="email"
+              label="Email"
+              id="email"
+              autoComplete="email"
+            />
+            <TextField
+              {...register("password", { required: true, minLength: 6 })}
+              label="Password"
+              type="password"
+              autoComplete="current-password"
+              id="password"
+            />
             <button
               type="submit"
-              className="flex w-full justify-center rounded-md bg-emerald-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-emerald-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+              className="flex w-full justify-center rounded-md bg-violet-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-violet-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
             >
               Login
             </button>
@@ -59,7 +56,7 @@ const Login = (): JSX.Element => {
             Don't have an account?{" "}
             <Link
               to="/auth/register"
-              className="font-semibold leading-6 text-emerald-600 hover:text-emerald-500"
+              className="font-semibold leading-6 text-violet-600 hover:text-violet-500"
             >
               Register here
             </Link>

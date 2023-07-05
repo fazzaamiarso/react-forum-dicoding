@@ -11,6 +11,7 @@ import { useAuth } from "@/hooks/useAuth";
 import dayjs from "@/utils/date-formatter";
 import { FaceFrownIcon } from "@heroicons/react/24/solid";
 import * as Separator from "@radix-ui/react-separator";
+import TextArea from "@/components/textarea";
 
 interface FormData {
   content: string;
@@ -77,12 +78,12 @@ const ThreadDetail = (): JSX.Element => {
         </ul>
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-2">
           <input type="hidden" {...register("threadId")} />
-          <label htmlFor="contet">Add Comment</label>
-          <textarea
+          <TextArea
             {...register("content", { required: true })}
+            label="Add Comment"
             id="content"
             rows={5}
-            className="w-full resize-y rounded-sm border-zinc-300 bg-zinc-100"
+            className="rounded-sm border-zinc-300 bg-zinc-100"
           />
           <button className="rounded-sm bg-violet-600 p-2 text-sm text-white transition-colors hover:bg-violet-500">
             Submit
