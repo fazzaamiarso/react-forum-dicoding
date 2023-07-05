@@ -35,11 +35,11 @@ const router = createBrowserRouter([
             path: "threads",
             children: [
               {
-                path: "threads/:threadId",
+                path: ":threadId",
                 element: <ThreadDetail />,
               },
               {
-                path: "threads/new",
+                path: "new",
                 element: <NewThread />,
               },
             ],
@@ -49,8 +49,8 @@ const router = createBrowserRouter([
       {
         path: "/auth",
         children: [
-          { path: "/auth/register", element: <Register /> },
-          { path: "/auth/login", element: <Login /> },
+          { path: "register", element: <Register /> },
+          { path: "login", element: <Login /> },
         ],
       },
     ],

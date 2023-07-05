@@ -28,7 +28,7 @@ const Home = (): JSX.Element => {
   return (
     <div className="space-y-8">
       <div>
-        <h2>Categories</h2>
+        <h2 className="mb-3 text-xl">Categories</h2>
         <ToggleGroup.Root
           type="single"
           className="flex items-center gap-2"
@@ -40,7 +40,11 @@ const Home = (): JSX.Element => {
               <ToggleGroup.Item
                 key={category}
                 value={category}
-                className={clsx("p-1 text-sm ring-1 ring-black", "data-[state='on']:bg-zinc-200")}
+                className={clsx(
+                  "rounded-full p-1 px-3 text-sm ring-1 ring-zinc-300 transition-colors",
+                  "data-[state='on']:bg-violet-700 data-[state='on']:text-white",
+                  "hover:bg-violet-200"
+                )}
               >
                 {category}
               </ToggleGroup.Item>
@@ -49,7 +53,7 @@ const Home = (): JSX.Element => {
         </ToggleGroup.Root>
       </div>
       <div>
-        <h2>Threads</h2>
+        <h2 className="mb-3 text-xl">Threads</h2>
         <ul className="space-y-4">
           {threadsByCategory?.map((thread) => {
             return <ThreadItem key={thread.id} {...thread} />;
@@ -80,10 +84,10 @@ const ThreadItem = ({
   const hasDownvoted = user?.id === undefined ? false : downVotesBy.includes(user.id);
 
   return (
-    <li className="space-y-5 rounded-sm p-4 shadow-sm ring-1 ring-gray-200">
+    <li className="space-y-5 rounded-sm bg-zinc-50 p-4 shadow-sm ring-1 ring-gray-200">
       <div className="mb-4 flex items-center gap-2">
         <UserAvatar imgSrc={owner.avatar} name={owner.name} size="sm" />
-        <div className="text-xs">{owner.name}</div>
+        <div className="text-xs font-semibold text-violet-600">{owner.name}</div>
         <div className="text-xs">{dayjs(createdAt).fromNow()}</div>
       </div>
       <div className="flex w-full gap-4">
@@ -102,11 +106,11 @@ const ThreadItem = ({
               {title}
             </Link>
           </h3>
-          <span className="rounded-full px-1 text-xs ring-1 ring-black">{category}</span>
+          <span className="px-1 text-xs">#{category}</span>
           <div className="line-clamp-6 text-sm">{parse(body)}</div>
           <div>
-            <div className="flex items-center gap-1 text-sm">
-              <ChatBubbleLeftIcon aria-hidden="true" className="w-4" />
+            <div className="flex items-center gap-1 text-sm ">
+              <ChatBubbleLeftIcon aria-hidden="true" className="w-4 text-zinc-500" />
               {totalComments} comments
             </div>
           </div>

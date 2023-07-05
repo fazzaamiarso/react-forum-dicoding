@@ -29,7 +29,7 @@ const AppLayout = (): JSX.Element => {
                 )}
               >
                 <div className="flex w-full items-center justify-between">
-                  <h2 className="text-lg font-bold text-teal-500">Giron</h2>
+                  <h2 className="text-lg font-bold text-violet-500">Giron</h2>
                   <Dialog.Close>
                     <XMarkIcon aria-hidden="true" className="aspect-square w-8" />
                   </Dialog.Close>
@@ -65,7 +65,7 @@ const AppLayout = (): JSX.Element => {
               </Dialog.Content>
             </Dialog.Portal>
           </Dialog.Root>
-          <h1 className="text-xl font-bold text-teal-500">
+          <h1 className="text-xl font-bold text-violet-500">
             <Link to="/">Giron</Link>
           </h1>
           {user !== undefined && (

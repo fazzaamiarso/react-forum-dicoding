@@ -36,18 +36,13 @@ export const VoteButton = ({
   };
   return (
     <div className="flex flex-col items-center">
-      <button
-        disabled={hasDownvoted}
-        onClick={onUpvote}
-        className={clsx(hasUpvoted && "text-red-600")}
-      >
+      <button onClick={onUpvote} className={clsx("text-zinc-700", hasUpvoted && "text-violet-600")}>
         <TriangleUpIcon aria-hidden="true" width={iconDimension} height={iconDimension} />
       </button>
       <div className="">{upVotes - downVotes}</div>
       <button
-        disabled={hasUpvoted}
         onClick={onDownvote}
-        className={clsx(hasDownvoted && "text-red-600")}
+        className={clsx("text-zinc-700", hasDownvoted && "text-violet-600")}
       >
         <TriangleDownIcon aria-hidden="true" width={iconDimension} height={iconDimension} />
       </button>
