@@ -13,12 +13,11 @@ interface Props {
 export const VoteButton = ({
   upVotes,
   downVotes,
-   updateVote,
+  updateVote,
   hasDownvoted,
   hasUpvoted,
 }: Props): JSX.Element => {
   const iconDimension = 28;
-
   const onUpvote = async (): Promise<void> => {
     if (hasUpvoted) {
       await updateVote("neutral-vote");
@@ -36,13 +35,13 @@ export const VoteButton = ({
   };
   return (
     <div className="flex flex-col items-center">
-      <button onClick={onUpvote} className={clsx("text-zinc-700", hasUpvoted && "text-violet-600")}>
+      <button onClick={onUpvote} className={clsx(hasUpvoted ? "text-violet-600" : "text-zinc-700")}>
         <TriangleUpIcon aria-hidden="true" width={iconDimension} height={iconDimension} />
       </button>
       <div className="">{upVotes - downVotes}</div>
       <button
         onClick={onDownvote}
-        className={clsx("text-zinc-700", hasDownvoted && "text-violet-600")}
+        className={clsx(hasDownvoted ? "text-violet-600" : "text-zinc-700")}
       >
         <TriangleDownIcon aria-hidden="true" width={iconDimension} height={iconDimension} />
       </button>

@@ -110,6 +110,7 @@ const CommentItem = ({
 
   const hasUpvoted = user?.id === undefined ? false : upVotesBy.includes(user.id);
   const hasDownvoted = user?.id === undefined ? false : downVotesBy.includes(user.id);
+
   return (
     <li className="space-y-4">
       <div className="flex items-center gap-4">
