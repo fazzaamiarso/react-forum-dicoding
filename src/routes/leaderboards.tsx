@@ -2,8 +2,9 @@
 import * as Separator from "@radix-ui/react-separator";
 import { useGetLeaderboardsQuery } from "@/services/api/leaderboards";
 import clsx from "clsx";
+import { UserAvatar } from "@/components/user-avatar";
 
-const standingsColorsMap = new Map([
+const standingsStyleMap = new Map([
   [1, "bg-[#FFD700] font-semibold"],
   [2, "bg-[#C0C0C0] font-semibold"],
   [3, "bg-[#CD7F32] font-semibold"],
@@ -30,16 +31,25 @@ const Leaderboard = (): JSX.Element => {
           return (
             <li key={ranker.user.id} className="mb-4 space-y-4">
               <div className="flex items-center gap-8">
-                <div
-                  className={clsx(
-                    "flex aspect-square w-8 items-center justify-center rounded-full",
-                    standingsColorsMap.get(standings)
-                  )}
-                >
-                  {standings}
+                <div className="flex items-center gap-3">
+                  <div
+                    className={clsx(
+                      "flex aspect-square w-8 items-center justify-center rounded-full",
+                      standingsStyleMap.get(standings)
+                    )}
+                  >
+                    {standings}
+                  </div>
+                  <Separator.Root
+                    className="bg-gray-300 data-[orientation=vertical]:h-8 data-[orientation=vertical]:w-px"
+                    orientation="vertical"
+                  />
                 </div>
-                <h3 className="font-normal">{ranker.user.name}</h3>
-                <div className="ml-auto">{ranker.score}</div>
+                <div className="flex items-center gap-4">
+                  <UserAvatar imgSrc={ranker.user.avatar} name={ranker.user.name} />
+                  <h3 className="text-sm font-normal sm:text-base">{ranker.user.name}</h3>
+                </div>
+                <div className="ml-auto text-sm sm:text-base">{ranker.score}</div>
               </div>
               <Separator.Root className="h-px w-full bg-gray-200" />
             </li>

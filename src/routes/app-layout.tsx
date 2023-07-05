@@ -7,6 +7,7 @@ import * as Dialog from "@radix-ui/react-dialog";
 import clsx from "clsx";
 import { Link, Outlet, useNavigate } from "react-router-dom";
 import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
+import * as Separator from "@radix-ui/react-separator";
 import { type ReactNode } from "react";
 
 const navigationLinks = [
@@ -17,8 +18,8 @@ const navigationLinks = [
 const AppLayout = (): JSX.Element => {
   const { user } = useAuth();
   return (
-    <div className="mx-auto min-h-screen w-11/12 max-w-2xl bg-zinc-50 px-8">
-      <header className="">
+    <div className="mx-auto min-h-screen w-11/12 max-w-2xl bg-zinc-50">
+      <header className="px-8">
         <div className="flex items-center gap-4 py-4">
           <Dialog.Root>
             <Dialog.Trigger className="md:hidden">
@@ -71,7 +72,7 @@ const AppLayout = (): JSX.Element => {
           <h1 className="text-xl font-bold text-violet-500">
             <Link to="/">Giron</Link>
           </h1>
-          <ul className="mx-auto hidden items-center gap-4 text-sm md:flex">
+          <ul className="mx-auto hidden items-center gap-4 text-sm text-zinc-600 md:flex">
             {navigationLinks.map((link) => {
               return (
                 <li key={link.label}>
@@ -109,7 +110,8 @@ const AppLayout = (): JSX.Element => {
           </div>
         </div>
       </header>
-      <main className="">
+      <Separator.Root className="h-px w-full bg-zinc-200" />
+      <main className="my-8 px-8">
         <Outlet />
       </main>
     </div>
@@ -134,14 +136,14 @@ const Menu = ({ triggerEl }: { triggerEl: ReactNode }): JSX.Element => {
           <DropdownMenu.Item asChild>
             <Link
               to="/threads/new"
-              className="inline-flex w-full p-2 text-start text-sm hover:bg-violet-100 hover:text-violet-800"
+              className="inline-flex w-full rounded-md p-2 text-start text-sm hover:bg-violet-100 hover:text-violet-800"
             >
               Create Thread
             </Link>
           </DropdownMenu.Item>
           <DropdownMenu.Item asChild>
             <button
-              className="inline-flex w-full p-2 text-start text-sm hover:bg-violet-100 hover:text-violet-800"
+              className="inline-flex w-full rounded-md p-2 text-start text-sm hover:bg-violet-100 hover:text-violet-800"
               onClick={() => {
                 dispatch(logout());
                 navigate("/auth/login", { replace: true });

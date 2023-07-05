@@ -84,7 +84,9 @@ const ThreadDetail = (): JSX.Element => {
             rows={5}
             className="w-full resize-y rounded-sm border-zinc-300 bg-zinc-100"
           />
-          <button className="rounded-sm bg-violet-600 p-2 px-3 text-sm text-white">Submit</button>
+          <button className="rounded-sm bg-violet-600 p-2 text-sm text-white transition-colors hover:bg-violet-500">
+            Submit
+          </button>
         </form>
       </section>
     </div>

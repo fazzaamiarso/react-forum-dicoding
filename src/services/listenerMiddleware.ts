@@ -50,16 +50,16 @@ listenerMiddleware.startListening({
   },
 });
 
-listenerMiddleware.startListening({
-  matcher: isAnyOf(
-    ...Array.from(Object.values(userApi.endpoints).map((endpoint) => endpoint.matchRejected)),
-    ...Array.from(
-      Object.values(leaderboardsApi.endpoints).map((endpoint) => endpoint.matchRejected)
-    ),
-    ...Array.from(Object.values(commentApi.endpoints).map((endpoint) => endpoint.matchRejected)),
-    ...Array.from(Object.values(threadApi.endpoints).map((endpoint) => endpoint.matchRejected))
-  ),
-  effect: (_action, listenerApi) => {
-    listenerApi.dispatch(hideLoading());
-  },
-});
+// listenerMiddleware.startListening({
+//   matcher: isAnyOf(
+//     ...Array.from(Object.values(userApi.endpoints).map((endpoint) => endpoint.matchRejected)),
+//     ...Array.from(
+//       Object.values(leaderboardsApi.endpoints).map((endpoint) => endpoint.matchRejected)
+//     ),
+//     ...Array.from(Object.values(commentApi.endpoints).map((endpoint) => endpoint.matchRejected)),
+//     ...Array.from(Object.values(threadApi.endpoints).map((endpoint) => endpoint.matchRejected))
+//   ),
+//   effect: (_action, listenerApi) => {
+//     listenerApi.dispatch(hideLoading());
+//   },
+// });
