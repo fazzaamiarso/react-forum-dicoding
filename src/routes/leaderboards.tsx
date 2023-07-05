@@ -4,9 +4,9 @@ import { useGetLeaderboardsQuery } from "@/services/api/leaderboards";
 import clsx from "clsx";
 
 const standingsColorsMap = new Map([
-  [1, "bg-[#FFD700]"],
-  [2, "bg-[#C0C0C0]"],
-  [3, "bg-[#CD7F32]"],
+  [1, "bg-[#FFD700] font-semibold"],
+  [2, "bg-[#C0C0C0] font-semibold"],
+  [3, "bg-[#CD7F32] font-semibold"],
 ]);
 
 const Leaderboard = (): JSX.Element => {
@@ -38,7 +38,7 @@ const Leaderboard = (): JSX.Element => {
                 >
                   {standings}
                 </div>
-                <h3>{ranker.user.name}</h3>
+                <h3 className="font-normal">{ranker.user.name}</h3>
                 <div className="ml-auto">{ranker.score}</div>
               </div>
               <Separator.Root className="h-px w-full bg-gray-200" />

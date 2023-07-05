@@ -13,6 +13,7 @@ import NewThread from "./routes/thread/new.tsx";
 import Leaderboard from "./routes/leaderboards.tsx";
 
 import "@fontsource-variable/open-sans";
+import AppLayout from "./routes/app-layout.tsx";
 
 const router = createBrowserRouter([
   {
@@ -20,28 +21,38 @@ const router = createBrowserRouter([
     element: <Root />,
     children: [
       {
-        index: true,
-        element: <Home />,
+        element: <AppLayout />,
+        children: [
+          {
+            index: true,
+            element: <Home />,
+          },
+          {
+            path: "leaderboards",
+            element: <Leaderboard />,
+          },
+          {
+            path: "threads",
+            children: [
+              {
+                path: "threads/:threadId",
+                element: <ThreadDetail />,
+              },
+              {
+                path: "threads/new",
+                element: <NewThread />,
+              },
+            ],
+          },
+        ],
       },
       {
-        path: "leaderboards",
-        element: <Leaderboard />,
+        path: "/auth",
+        children: [
+          { path: "/auth/register", element: <Register /> },
+          { path: "/auth/login", element: <Login /> },
+        ],
       },
-      {
-        path: "threads/:threadId",
-        element: <ThreadDetail />,
-      },
-      {
-        path: "threads/new",
-        element: <NewThread />,
-      },
-    ],
-  },
-  {
-    path: "/auth",
-    children: [
-      { path: "/auth/register", element: <Register /> },
-      { path: "/auth/login", element: <Login /> },
     ],
   },
 ]);

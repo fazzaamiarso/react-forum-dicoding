@@ -17,6 +17,8 @@ export const VoteButton = ({
   hasDownvoted,
   hasUpvoted,
 }: Props): JSX.Element => {
+  const iconDimension = 28;
+
   const onUpvote = async (): Promise<void> => {
     if (hasUpvoted) {
       await updateVote("neutral-vote");
@@ -39,15 +41,15 @@ export const VoteButton = ({
         onClick={onUpvote}
         className={clsx(hasUpvoted && "text-red-600")}
       >
-        <TriangleUpIcon aria-hidden="true" width={32} />
+        <TriangleUpIcon aria-hidden="true" width={iconDimension} height={iconDimension} />
       </button>
-      <div className="text-sm">{upVotes - downVotes}</div>
+      <div className="">{upVotes - downVotes}</div>
       <button
         disabled={hasUpvoted}
         onClick={onDownvote}
         className={clsx(hasDownvoted && "text-red-600")}
       >
-        <TriangleDownIcon aria-hidden="true" width={32} />
+        <TriangleDownIcon aria-hidden="true" width={iconDimension} height={iconDimension} />
       </button>
     </div>
   );

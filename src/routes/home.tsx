@@ -9,6 +9,7 @@ import { useAuth } from "@/hooks/useAuth";
 import * as ToggleGroup from "@radix-ui/react-toggle-group";
 import clsx from "clsx";
 import { useState } from "react";
+import dayjs from "@/utils/date-formatter";
 
 const Home = (): JSX.Element => {
   const [selectedCategory, setSelectedCategory] = useState<string>("");
@@ -83,11 +84,7 @@ const ThreadItem = ({
       <div className="mb-4 flex items-center gap-2">
         <UserAvatar imgSrc={owner.avatar} name={owner.name} size="sm" />
         <div className="text-xs">{owner.name}</div>
-        <div className="text-xs">
-          {new Intl.DateTimeFormat("en-US", {
-            dateStyle: "short",
-          }).format(new Date(createdAt))}
-        </div>
+        <div className="text-xs">{dayjs(createdAt).fromNow()}</div>
       </div>
       <div className="flex w-full gap-4">
         <VoteButton
@@ -100,12 +97,12 @@ const ThreadItem = ({
           }}
         />
         <div className="space-y-4">
-          <h3 className="font-semibold">
+          <h3 className="text-lg font-semibold">
             <Link to={`threads/${id}`} className="line-clamp-2 break-all">
               {title}
             </Link>
           </h3>
-          <span className="p-1 text-xs ring-1">{category}</span>
+          <span className="rounded-full px-1 text-xs ring-1 ring-black">{category}</span>
           <div className="line-clamp-6 text-sm">{parse(body)}</div>
           <div>
             <div className="flex items-center gap-1 text-sm">

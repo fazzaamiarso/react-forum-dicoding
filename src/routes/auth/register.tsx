@@ -16,9 +16,8 @@ const Register = (): JSX.Element => {
   const { register, handleSubmit } = useForm<FormData>();
 
   const onSubmit: SubmitHandler<FormData> = async (data) => {
-    const user = await registerUser(data).unwrap();
-    await loginUser({ email: data.email, password: data.email });
-    console.log({ user, formData: data });
+     await registerUser(data);
+     await loginUser({ email: data.email, password: data.email });
     navigate("/");
   };
 
