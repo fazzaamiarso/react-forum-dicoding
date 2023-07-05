@@ -3,7 +3,7 @@ import GlobalLoadingBar from "@/components/loading-bar";
 
 const Root = (): JSX.Element => {
   return (
-    <div className="min-h-screen bg-zinc-100 font-open-sans text-zinc-800">
+    <div className="min-h-screen w-screen bg-zinc-100 font-open-sans text-zinc-800">
       <GlobalLoadingBar />
       <Outlet />
     </div>

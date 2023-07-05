@@ -6,23 +6,23 @@ import { hideLoading, showLoading } from "./loadingSlice";
 import { leaderboardsApi } from "./api/leaderboards";
 import { commentApi } from "./api/comment";
 
-export const listenereMiddleware = createListenerMiddleware();
+export const listenerMiddleware = createListenerMiddleware();
 
-listenereMiddleware.startListening({
+listenerMiddleware.startListening({
   matcher: userApi.endpoints.login.matchFulfilled,
   effect: async (action) => {
     localStorage.setItem("giron-auth-token", action.payload.token);
   },
 });
 
-listenereMiddleware.startListening({
+listenerMiddleware.startListening({
   actionCreator: logout,
   effect: async () => {
     localStorage.removeItem("giron-auth-token");
   },
 });
 
-listenereMiddleware.startListening({
+listenerMiddleware.startListening({
   matcher: isAnyOf(
     ...Array.from(Object.values(userApi.endpoints).map((endpoint) => endpoint.matchPending)),
     ...Array.from(
@@ -36,7 +36,7 @@ listenereMiddleware.startListening({
   },
 });
 
-listenereMiddleware.startListening({
+listenerMiddleware.startListening({
   matcher: isAnyOf(
     ...Array.from(Object.values(userApi.endpoints).map((endpoint) => endpoint.matchFulfilled)),
     ...Array.from(
@@ -44,6 +44,20 @@ listenereMiddleware.startListening({
     ),
     ...Array.from(Object.values(commentApi.endpoints).map((endpoint) => endpoint.matchFulfilled)),
     ...Array.from(Object.values(threadApi.endpoints).map((endpoint) => endpoint.matchFulfilled))
+  ),
+  effect: (_action, listenerApi) => {
+    listenerApi.dispatch(hideLoading());
+  },
+});
+
+listenerMiddleware.startListening({
+  matcher: isAnyOf(
+    ...Array.from(Object.values(userApi.endpoints).map((endpoint) => endpoint.matchRejected)),
+    ...Array.from(
+      Object.values(leaderboardsApi.endpoints).map((endpoint) => endpoint.matchRejected)
+    ),
+    ...Array.from(Object.values(commentApi.endpoints).map((endpoint) => endpoint.matchRejected)),
+    ...Array.from(Object.values(threadApi.endpoints).map((endpoint) => endpoint.matchRejected))
   ),
   effect: (_action, listenerApi) => {
     listenerApi.dispatch(hideLoading());

@@ -7,17 +7,21 @@ import * as Dialog from "@radix-ui/react-dialog";
 import clsx from "clsx";
 import { Link, Outlet, useNavigate } from "react-router-dom";
 import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
+import { type ReactNode } from "react";
+
+const navigationLinks = [
+  { label: "Home", to: "/" },
+  { label: "Leaderboard", to: "/leaderboards" },
+];
 
 const AppLayout = (): JSX.Element => {
-  const navigate = useNavigate();
-  const dispatch = useAppDispatch();
   const { user } = useAuth();
   return (
-    <>
-      <header className="mx-auto w-11/12 max-w-2xl">
+    <div className="mx-auto min-h-screen w-11/12 max-w-2xl bg-zinc-50 px-8">
+      <header className="">
         <div className="flex items-center gap-4 py-4">
           <Dialog.Root>
-            <Dialog.Trigger>
+            <Dialog.Trigger className="md:hidden">
               <Bars3Icon aria-hidden="true" className="aspect-square w-8" />
             </Dialog.Trigger>
             <Dialog.Portal>
@@ -51,16 +55,15 @@ const AppLayout = (): JSX.Element => {
                   </div>
                 )}
                 <ul className="space-y-6">
-                  <li>
-                    <Link to="/" className="w-full py-2 ">
-                      Home
-                    </Link>
-                  </li>
-                  <li>
-                    <Link to="/leaderboards" className="w-full py-2 ">
-                      Leaderboard
-                    </Link>
-                  </li>
+                  {navigationLinks.map((link) => {
+                    return (
+                      <li key={link.label}>
+                        <Link to={link.to} className="w-full py-2 ">
+                          {link.label}
+                        </Link>
+                      </li>
+                    );
+                  })}
                 </ul>
               </Dialog.Content>
             </Dialog.Portal>
@@ -68,44 +71,87 @@ const AppLayout = (): JSX.Element => {
           <h1 className="text-xl font-bold text-violet-500">
             <Link to="/">Giron</Link>
           </h1>
-          {user !== undefined && (
-            <DropdownMenu.Root>
-              <DropdownMenu.Trigger className="ml-auto">
-                <UserAvatar imgSrc={user?.avatar ?? ""} name={user?.name ?? ""} />
-              </DropdownMenu.Trigger>
-              <DropdownMenu.Portal>
-                <DropdownMenu.Content
-                  align="end"
-                  sideOffset={5}
-                  className={clsx(
-                    "min-w-[150px] rounded-md bg-zinc-100 p-2 text-zinc-800 shadow-md"
-                  )}
-                >
-                  <DropdownMenu.Item asChild>
-                    <Link to="/threads/new" className="inline-flex w-full py-1 text-start text-sm">
-                      Create Thread
-                    </Link>
-                  </DropdownMenu.Item>
-                  <DropdownMenu.Item
-                    className="inline-flex w-full py-1 text-start text-sm"
-                    onSelect={() => {
-                      dispatch(logout());
-                      navigate("/auth/login", { replace: true });
-                    }}
+          <ul className="mx-auto hidden items-center gap-4 text-sm md:flex">
+            {navigationLinks.map((link) => {
+              return (
+                <li key={link.label}>
+                  <Link
+                    to={link.to}
+                    className="w-full py-2 font-semibold transition-colors hover:text-violet-500 hover:underline"
                   >
-                    Logout
-                  </DropdownMenu.Item>
-                </DropdownMenu.Content>
-              </DropdownMenu.Portal>
-            </DropdownMenu.Root>
-          )}
+                    {link.label}
+                  </Link>
+                </li>
+              );
+            })}
+          </ul>
+          <div className="ml-auto">
+            {user !== undefined ? (
+              <Menu
+                triggerEl={<UserAvatar imgSrc={user?.avatar ?? ""} name={user?.name ?? ""} />}
+              />
+            ) : (
+              <div className="flex items-center gap-2">
+                <Link
+                  to="/auth/login"
+                  className="inline-flex rounded-sm px-3 py-2 text-center text-sm ring-1 ring-zinc-400"
+                >
+                  Log in
+                </Link>
+                <Link
+                  to="/auth/register"
+                  className="inline-flex rounded-sm bg-violet-700 px-3 py-2 text-center text-sm text-white ring-1 ring-violet-700"
+                >
+                  Create an account
+                </Link>
+              </div>
+            )}
+          </div>
         </div>
       </header>
-      <main className="mx-auto my-8 w-11/12 max-w-2xl">
+      <main className="">
         <Outlet />
       </main>
-    </>
+    </div>
   );
 };
 
 export default AppLayout;
+
+const Menu = ({ triggerEl }: { triggerEl: ReactNode }): JSX.Element => {
+  const dispatch = useAppDispatch();
+  const navigate = useNavigate();
+
+  return (
+    <DropdownMenu.Root>
+      <DropdownMenu.Trigger>{triggerEl}</DropdownMenu.Trigger>
+      <DropdownMenu.Portal>
+        <DropdownMenu.Content
+          align="end"
+          sideOffset={5}
+          className={clsx("min-w-[150px] rounded-md bg-zinc-50 p-2 text-zinc-800 shadow-md")}
+        >
+          <DropdownMenu.Item asChild>
+            <Link
+              to="/threads/new"
+              className="inline-flex w-full p-2 text-start text-sm hover:bg-violet-100 hover:text-violet-800"
+            >
+              Create Thread
+            </Link>
+          </DropdownMenu.Item>
+          <DropdownMenu.Item asChild>
+            <button
+              className="inline-flex w-full p-2 text-start text-sm hover:bg-violet-100 hover:text-violet-800"
+              onClick={() => {
+                dispatch(logout());
+                navigate("/auth/login", { replace: true });
+              }}
+            >
+              Logout
+            </button>
+          </DropdownMenu.Item>
+        </DropdownMenu.Content>
+      </DropdownMenu.Portal>
+    </DropdownMenu.Root>
+  );
+};

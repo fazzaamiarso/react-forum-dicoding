@@ -8,6 +8,9 @@ import { type SubmitHandler, useForm } from "react-hook-form";
 import { useCreateCommentMutation, useUpdateVoteCommentMutation } from "@/services/api/comment";
 import type { Comment } from "@/types";
 import { useAuth } from "@/hooks/useAuth";
+import dayjs from "@/utils/date-formatter";
+import { FaceFrownIcon } from "@heroicons/react/24/solid";
+import * as Separator from "@radix-ui/react-separator";
 
 interface FormData {
   content: string;
@@ -30,22 +33,33 @@ const ThreadDetail = (): JSX.Element => {
   };
 
   return (
-    <div className="space-y-8">
+    <div className="my-12 space-y-8">
       <div className="mb-8">
         <div className="mb-4 flex items-center gap-2">
           <UserAvatar imgSrc={data.owner.avatar} name={data.owner.name} />
           <div>
             <div className="text-sm font-semibold">{data?.owner.name}</div>
-            <div className="text-xs">Posted on {data?.createdAt}</div>
+            <div className="text-xs text-zinc-500">
+              Posted on {dayjs(data?.createdAt).format("dddd, DD MMMM YYYY")}
+            </div>
           </div>
         </div>
-        <h2 className="text-3xl font-semibold">{data?.title}</h2>
-        <span className="p-1 text-sm ring-1 ring-black">{data?.category}</span>
+        <h2 className="mb-2 text-2xl font-semibold">{data?.title}</h2>
+        <span className="rounded-full p-1 px-2 text-sm text-zinc-600 ring-1 ring-violet-400">
+          {data?.category}
+        </span>
       </div>
       <div>{parse(data?.body ?? "")}</div>
-      <section>
-        <h3 className="font-semibold">Comments ({data?.comments.length})</h3>
-        <ul>
+      <Separator.Root className="h-px w-full bg-zinc-200" />
+      <section className="space-y-8">
+        <h3 className="mb-4 font-semibold">Comments ({data?.comments.length})</h3>
+        {data?.comments.length === 0 && (
+          <div className="flex h-32 w-full flex-col items-center justify-center gap-2 text-zinc-700">
+            <FaceFrownIcon aria-hidden="true" className="w-8" />
+            <h4>There are no comments yet!</h4>
+          </div>
+        )}
+        <ul className="space-y-4">
           {data?.comments.map((comment) => {
             return (
               <CommentItem
@@ -61,16 +75,16 @@ const ThreadDetail = (): JSX.Element => {
             );
           })}
         </ul>
-        <form onSubmit={handleSubmit(onSubmit)}>
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-2">
           <input type="hidden" {...register("threadId")} />
           <label htmlFor="contet">Add Comment</label>
           <textarea
             {...register("content", { required: true })}
             id="content"
-            rows={7}
-            className="w-full resize-y rounded-sm"
+            rows={5}
+            className="w-full resize-y rounded-sm border-zinc-300 bg-zinc-100"
           />
-          <button className="rounded-sm bg-black p-2 text-white">Submit</button>
+          <button className="rounded-sm bg-violet-600 p-2 px-3 text-sm text-white">Submit</button>
         </form>
       </section>
     </div>
@@ -97,12 +111,12 @@ const CommentItem = ({
   const hasUpvoted = user?.id === undefined ? false : upVotesBy.includes(user.id);
   const hasDownvoted = user?.id === undefined ? false : downVotesBy.includes(user.id);
   return (
-    <li>
+    <li className="space-y-4">
       <div className="flex items-center gap-4">
-        <UserAvatar imgSrc={owner.avatar} name={owner.name} />
-        <div>
-          <h4 className="font-semibold">{owner.name}</h4>
-          <span className="text-xs">{createdAt}</span>
+        <UserAvatar imgSrc={owner.avatar} name={owner.name} size="sm" />
+        <div className="flex items-center gap-2">
+          <h4 className="text-sm font-semibold text-violet-600">{owner.name}</h4>
+          <span className="text-xs">{dayjs(createdAt).fromNow()}</span>
         </div>
       </div>
       <div className="flex items-start gap-4">
@@ -115,8 +129,9 @@ const CommentItem = ({
             await updateVote({ threadId, type, commentId: id });
           }}
         />
-        <div className="text-sm">{parse(content)}</div>
+        <div className="">{parse(content)}</div>
       </div>
+      <Separator.Root className="h-px w-full bg-zinc-200" />
     </li>
   );
 };

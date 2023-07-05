@@ -4,7 +4,7 @@ import { commentApi } from "./services/api/comment";
 import { userApi } from "./services/api/user";
 import authSlice from "./services/authSlice";
 import loadingSlice from "./services/loadingSlice";
-import { listenereMiddleware } from "./services/listenerMiddleware";
+import { listenerMiddleware } from "./services/listenerMiddleware";
 import { leaderboardsApi } from "./services/api/leaderboards";
 
 export const store = configureStore({
@@ -18,7 +18,7 @@ export const store = configureStore({
     [leaderboardsApi.reducerPath]: leaderboardsApi.reducer,
   },
   middleware: (getDefaultMiddleware) => [
-    listenereMiddleware.middleware, // must be placed before defaultMiddleware
+    listenerMiddleware.middleware, // must be placed before defaultMiddleware
     ...getDefaultMiddleware(),
     threadApi.middleware,
     commentApi.middleware,
