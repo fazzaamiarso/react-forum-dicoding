@@ -4,5 +4,7 @@ import { useGetOwnProfileQuery } from "@/services/api/user";
 export const useAuth = () => {
   const { data: user } = useGetOwnProfileQuery();
 
-  return { user };
+  const isAuthenticated = user !== undefined;
+
+  return { user, isAuthenticated };
 };

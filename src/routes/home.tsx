@@ -102,7 +102,10 @@ const ThreadItem = ({
         />
         <div className="space-y-4">
           <h3 className="text-lg font-semibold">
-            <Link to={`threads/${id}`} className="line-clamp-2 break-all">
+            <Link
+              to={`threads/${id}`}
+              className="line-clamp-2 break-all transition-colors hover:text-violet-500"
+            >
               {title}
             </Link>
           </h3>

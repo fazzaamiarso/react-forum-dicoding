@@ -23,15 +23,8 @@ const ThreadDetail = (): JSX.Element => {
   if (threadId === undefined) throw Error("threadId can't be undefined!");
 
   const { data } = useGetThreadByIdQuery(threadId, { skip: threadId === null });
-  const [createComment] = useCreateCommentMutation();
-  const { register, handleSubmit, resetField } = useForm<FormData>({ defaultValues: { threadId } });
 
   if (data === undefined) return <div></div>; // TODO: Replace this with proper loading
-
-  const onSubmit: SubmitHandler<FormData> = async (data) => {
-    await createComment(data);
-    resetField("content");
-  };
 
   return (
     <div className="my-12 space-y-8">
@@ -76,19 +69,7 @@ const ThreadDetail = (): JSX.Element => {
             );
           })}
         </ul>
-        <form onSubmit={handleSubmit(onSubmit)} className="space-y-2">
-          <input type="hidden" {...register("threadId")} />
-          <TextArea
-            {...register("content", { required: true })}
-            label="Add Comment"
-            id="content"
-            rows={5}
-            className="rounded-sm border-zinc-300 bg-zinc-100"
-          />
-          <button className="rounded-sm bg-violet-600 p-2 text-sm text-white transition-colors hover:bg-violet-500">
-            Submit
-          </button>
-        </form>
+        <CommentForm threadId={threadId} />
       </section>
     </div>
   );
@@ -137,5 +118,31 @@ const CommentItem = ({
       </div>
       <Separator.Root className="h-px w-full bg-zinc-200" />
     </li>
+  );
+};
+
+const CommentForm = ({ threadId }: { threadId: string }): JSX.Element => {
+  const [createComment] = useCreateCommentMutation();
+  const { register, handleSubmit, resetField } = useForm<FormData>({ defaultValues: { threadId } });
+
+  const onSubmit: SubmitHandler<FormData> = async (data) => {
+    await createComment(data);
+    resetField("content");
+  };
+
+  return (
+    <form onSubmit={handleSubmit(onSubmit)} className="space-y-2">
+      <input type="hidden" {...register("threadId")} />
+      <TextArea
+        {...register("content", { required: true })}
+        label="Add Comment"
+        id="content"
+        rows={5}
+        className="rounded-sm border-zinc-300 bg-zinc-100"
+      />
+      <button className="rounded-sm bg-violet-600 p-2 text-sm text-white transition-colors hover:bg-violet-500">
+        Submit
+      </button>
+    </form>
   );
 };

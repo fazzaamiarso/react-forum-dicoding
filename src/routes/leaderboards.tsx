@@ -3,6 +3,7 @@ import * as Separator from "@radix-ui/react-separator";
 import { useGetLeaderboardsQuery } from "@/services/api/leaderboards";
 import clsx from "clsx";
 import { UserAvatar } from "@/components/user-avatar";
+import dayjs from "@/utils/date-formatter";
 
 const standingsStyleMap = new Map([
   [1, "bg-[#FFD700] font-semibold"],
@@ -18,7 +19,7 @@ const Leaderboard = (): JSX.Element => {
         <div>
           <h2 className="text-2xl">Leaderboards</h2>
           <span className="text-xs">
-            Last updated: {new Date(fulfilledTimeStamp ?? Date.now()).toUTCString()}
+            Last updated: {dayjs.tz(fulfilledTimeStamp, "Asia/Jakarta").toString()}
           </span>
         </div>
         <button className="rounded-sm p-1 text-sm ring-1 ring-black" onClick={refetch}>
