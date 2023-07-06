@@ -19,7 +19,7 @@ const NewThread = (): JSX.Element => {
 
   const onSubmit: SubmitHandler<FormData> = async (data) => {
     try {
-      await createThread(data);
+      await createThread(data).unwrap();
       navigate("/");
     } catch (e) {
       console.error(e);

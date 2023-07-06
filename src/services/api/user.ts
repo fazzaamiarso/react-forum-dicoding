@@ -1,7 +1,7 @@
 import { baseApi } from "./base";
 import type { User } from "@/types";
 
-export const userApi = baseApi.injectEndpoints({
+export const userApi = baseApi.enhanceEndpoints({ addTagTypes: ["User"] }).injectEndpoints({
   endpoints: (builder) => ({
     getAllUsers: builder.query<User[], void>({
       query: () => "users",
@@ -10,6 +10,7 @@ export const userApi = baseApi.injectEndpoints({
       },
     }),
     getOwnProfile: builder.query<User, void>({
+      providesTags: ["User"],
       query: () => "users/me",
       transformResponse: (rawResult: { data: { user: User } }) => {
         return rawResult.data.user;
@@ -30,6 +31,7 @@ export const userApi = baseApi.injectEndpoints({
       transformResponse: (rawResult: { data: { token: string } }) => ({
         token: rawResult.data.token,
       }),
+      invalidatesTags: ["User"],
     }),
   }),
 });

@@ -4,12 +4,13 @@ import React from "react";
 interface TextAreaOwnProps {
   label: string;
   description?: string;
+  error?: string;
 }
 
 type TextAreaProps = TextAreaOwnProps & React.ComponentPropsWithoutRef<"textarea">;
 
 const TextArea = React.forwardRef<HTMLTextAreaElement, TextAreaProps>(
-  ({ label, id, name, className, description, ...rest }, forwardedRef) => {
+  ({ label, id, name, error, className, description, ...rest }, forwardedRef) => {
     return (
       <div className="w-full">
         <div className="mb-2">
@@ -25,6 +26,7 @@ const TextArea = React.forwardRef<HTMLTextAreaElement, TextAreaProps>(
           name={name}
           className={clsx("w-full resize-y rounded-sm border-zinc-400", className)}
         />
+        {error !== undefined && <p className="text-xs text-red-500">{error}</p>}
       </div>
     );
   }

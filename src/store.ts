@@ -18,8 +18,7 @@ export const store = configureStore({
     [leaderboardsApi.reducerPath]: leaderboardsApi.reducer,
   },
   middleware: (getDefaultMiddleware) => [
-    listenerMiddleware.middleware, // must be placed before defaultMiddleware
-    ...getDefaultMiddleware(),
+    ...getDefaultMiddleware().prepend(listenerMiddleware.middleware),
     threadApi.middleware,
     commentApi.middleware,
     userApi.middleware,

@@ -2,6 +2,7 @@
 import TextField from "@/components/text-field";
 import { useLoginMutation, useRegisterMutation } from "@/services/api/user";
 import { useForm, type SubmitHandler } from "react-hook-form";
+import toast from "react-hot-toast";
 import { Link, useNavigate } from "react-router-dom";
 
 interface FormData {
@@ -14,12 +15,20 @@ const Register = (): JSX.Element => {
   const navigate = useNavigate();
   const [registerUser] = useRegisterMutation();
   const [loginUser] = useLoginMutation();
-  const { register, handleSubmit } = useForm<FormData>();
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<FormData>();
 
   const onSubmit: SubmitHandler<FormData> = async (data) => {
-    await registerUser(data);
-    await loginUser({ email: data.email, password: data.email });
-    navigate("/");
+    try {
+      await registerUser(data).unwrap();
+      await loginUser({ email: data.email, password: data.password }).unwrap();
+      navigate("/");
+    } catch (e: any) {
+      toast.error(e?.data.message);
+    }
   };
 
   return (
@@ -37,21 +46,29 @@ const Register = (): JSX.Element => {
               label="Name"
               id="name"
               autoComplete="off"
-              {...register("name", { required: true })}
+              {...register("name", { required: "Name can't be empty!" })}
+              error={errors.name?.message}
             />
             <TextField
-              {...register("email", { required: true })}
+              {...register("email", {
+                required: "Email can't be empty!",
+              })}
               type="email"
               label="Email"
               id="email"
               autoComplete="email"
+              error={errors.email?.message}
             />
             <TextField
-              {...register("password", { required: true, minLength: 6 })}
+              {...register("password", {
+                required: "Password can't be empty!",
+                minLength: { value: 6, message: "Password must be at least 6 characters" },
+              })}
               label="Password"
               type="password"
               autoComplete="current-password"
               id="password"
+              error={errors.password?.message}
             />
             <button
               type="submit"
