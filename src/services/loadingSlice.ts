@@ -9,7 +9,7 @@ const loadingSlice = createSlice({
       state.pendingPromisesCount++;
     },
     hideLoading: (state) => {
-      const pendingPromises = --state.pendingPromisesCount;
+      const pendingPromises = state.pendingPromisesCount === 0 ? 0 : --state.pendingPromisesCount;
       if (pendingPromises === 0) state.loading = false; // Only hide when there are no pending promises
     },
   },
