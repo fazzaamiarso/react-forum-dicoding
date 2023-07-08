@@ -14,14 +14,17 @@ import Leaderboard from "./routes/leaderboards.tsx";
 
 import "@fontsource-variable/open-sans";
 import AppLayout from "./routes/app-layout.tsx";
+import NotFound from "./routes/404.tsx";
 
 const router = createBrowserRouter([
   {
     path: "/",
     element: <Root />,
+    errorElement: <NotFound />,
     children: [
       {
         element: <AppLayout />,
+        errorElement: <NotFound />,
         children: [
           {
             index: true,

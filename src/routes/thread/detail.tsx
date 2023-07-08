@@ -12,6 +12,8 @@ import dayjs from "@/utils/date-formatter";
 import { FaceFrownIcon } from "@heroicons/react/24/solid";
 import * as Separator from "@radix-ui/react-separator";
 import TextArea from "@/components/textarea";
+import { skipToken } from "@reduxjs/toolkit/dist/query";
+import NotFound from "../404";
 
 interface FormData {
   content: string;
@@ -20,11 +22,10 @@ interface FormData {
 
 const ThreadDetail = (): JSX.Element => {
   const { threadId } = useParams();
-  if (threadId === undefined) throw Error("threadId can't be undefined!");
+  if (threadId === undefined) throw Error("threadId not found");
+  const { data } = useGetThreadByIdQuery(threadId ?? skipToken);
 
-  const { data } = useGetThreadByIdQuery(threadId, { skip: threadId === null });
-
-  if (data === undefined) return <div></div>; // TODO: Replace this with proper loading
+  if (data === undefined) return <NotFound />;
 
   return (
     <div className="my-12 space-y-8">
