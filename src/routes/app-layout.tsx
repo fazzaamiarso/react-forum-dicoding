@@ -81,11 +81,11 @@ const Drawer = ({ isAuthenticated }: { isAuthenticated: boolean }): JSX.Element 
         <Bars3Icon aria-hidden="true" className="aspect-square w-8" />
       </Dialog.Trigger>
       <Dialog.Portal>
-        <Dialog.Overlay className="fixed inset-0 bg-black bg-opacity-30" />
+        <Dialog.Overlay className="fixed inset-0 animate-overlayShow bg-black bg-opacity-30" />
         <Dialog.Content
           className={clsx(
             "fixed left-0 top-0 min-h-screen min-w-[250px] space-y-8 bg-white p-4",
-            "-translate-x-full data-[state=open]:translate-x-0"
+            "data-[state=open]:animate-contentShow"
           )}
         >
           <div className="flex w-full items-center justify-between">
@@ -143,7 +143,7 @@ const Menu = ({ triggerEl }: { triggerEl: ReactNode }): JSX.Element => {
         <DropdownMenu.Content
           align="end"
           sideOffset={5}
-          className="min-w-[150px] rounded-md bg-zinc-50 p-2 text-zinc-800 shadow-md"
+          className="min-w-[150px] animate-slideDownAndFade rounded-md bg-zinc-50 p-2 text-zinc-800 shadow-md"
         >
           <DropdownMenu.Item asChild>
             <Link
