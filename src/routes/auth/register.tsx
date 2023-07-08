@@ -26,8 +26,9 @@ const Register = (): JSX.Element => {
       await registerUser(data).unwrap();
       await loginUser({ email: data.email, password: data.password }).unwrap();
       navigate("/");
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (e: any) {
-      toast.error(e?.data.message);
+      toast.error("message" in e?.data ? e?.data.message : "");
     }
   };
 

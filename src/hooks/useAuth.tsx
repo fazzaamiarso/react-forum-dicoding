@@ -1,4 +1,5 @@
 import { useGetOwnProfileQuery } from "@/services/api/user";
+import { useMemo } from "react";
 
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 export const useAuth = () => {
@@ -6,5 +7,5 @@ export const useAuth = () => {
 
   const isAuthenticated = user !== undefined;
 
-  return { user, isAuthenticated };
+  return useMemo(() => ({ user, isAuthenticated }), [user, isAuthenticated]);
 };

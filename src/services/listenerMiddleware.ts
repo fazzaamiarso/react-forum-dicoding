@@ -8,6 +8,13 @@ import { commentApi } from "./api/comment";
 
 export const listenerMiddleware = createListenerMiddleware();
 
+const allEndpoints = [
+  ...Array.from(Object.values(userApi.endpoints)),
+  ...Array.from(Object.values(leaderboardsApi.endpoints)),
+  ...Array.from(Object.values(commentApi.endpoints)),
+  ...Array.from(Object.values(threadApi.endpoints)),
+];
+
 listenerMiddleware.startListening({
   matcher: userApi.endpoints.login.matchFulfilled,
   effect: async (action) => {
@@ -23,56 +30,21 @@ listenerMiddleware.startListening({
 });
 
 listenerMiddleware.startListening({
-  matcher: isAnyOf(
-    ...Array.from(Object.values(userApi.endpoints).map((endpoint) => endpoint.matchPending)),
-    ...Array.from(
-      Object.values(leaderboardsApi.endpoints).map((endpoint) => endpoint.matchPending)
-    ),
-    ...Array.from(Object.values(commentApi.endpoints).map((endpoint) => endpoint.matchPending)),
-    ...Array.from(Object.values(threadApi.endpoints).map((endpoint) => endpoint.matchPending))
-  ),
+  matcher: isAnyOf(...allEndpoints.map((endpoint) => endpoint.matchPending)),
   effect: (_action, listenerApi) => {
     listenerApi.dispatch(showLoading());
   },
 });
 
 listenerMiddleware.startListening({
-  matcher: isAnyOf(
-    ...Array.from(Object.values(userApi.endpoints).map((endpoint) => endpoint.matchFulfilled)),
-    ...Array.from(
-      Object.values(leaderboardsApi.endpoints).map((endpoint) => endpoint.matchFulfilled)
-    ),
-    ...Array.from(Object.values(commentApi.endpoints).map((endpoint) => endpoint.matchFulfilled)),
-    ...Array.from(Object.values(threadApi.endpoints).map((endpoint) => endpoint.matchFulfilled))
-  ),
+  matcher: isAnyOf(...allEndpoints.map((endpoint) => endpoint.matchFulfilled)),
   effect: (_action, listenerApi) => {
     listenerApi.dispatch(hideLoading());
   },
 });
 
 listenerMiddleware.startListening({
-  matcher: isAnyOf(
-    ...Array.from(Object.values(userApi.endpoints).map((endpoint) => endpoint.matchFulfilled)),
-    ...Array.from(
-      Object.values(leaderboardsApi.endpoints).map((endpoint) => endpoint.matchFulfilled)
-    ),
-    ...Array.from(Object.values(commentApi.endpoints).map((endpoint) => endpoint.matchFulfilled)),
-    ...Array.from(Object.values(threadApi.endpoints).map((endpoint) => endpoint.matchFulfilled))
-  ),
-  effect: (_action, listenerApi) => {
-    listenerApi.dispatch(hideLoading());
-  },
-});
-
-listenerMiddleware.startListening({
-  matcher: isAnyOf(
-    ...Array.from(Object.values(userApi.endpoints).map((endpoint) => endpoint.matchRejected)),
-    ...Array.from(
-      Object.values(leaderboardsApi.endpoints).map((endpoint) => endpoint.matchRejected)
-    ),
-    ...Array.from(Object.values(commentApi.endpoints).map((endpoint) => endpoint.matchRejected)),
-    ...Array.from(Object.values(threadApi.endpoints).map((endpoint) => endpoint.matchRejected))
-  ),
+  matcher: isAnyOf(...allEndpoints.map((endpoint) => endpoint.matchRejected)),
   effect: (_action, listenerApi) => {
     listenerApi.dispatch(hideLoading());
   },

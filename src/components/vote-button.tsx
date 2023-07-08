@@ -35,13 +35,21 @@ export const VoteButton = ({
   };
   return (
     <div className="flex flex-col items-center">
-      <button onClick={onUpvote} className={clsx(hasUpvoted ? "text-violet-600" : "text-zinc-700")}>
+      <button
+        disabled={hasDownvoted}
+        onClick={onUpvote}
+        className={clsx(hasUpvoted ? "text-violet-600" : "text-zinc-700", "disabled:text-zinc-500")}
+      >
         <TriangleUpIcon aria-hidden="true" width={iconDimension} height={iconDimension} />
       </button>
-      <div className="">{upVotes - downVotes}</div>
+      <div>{upVotes - downVotes}</div>
       <button
+        disabled={hasUpvoted}
         onClick={onDownvote}
-        className={clsx(hasDownvoted ? "text-violet-600" : "text-zinc-700")}
+        className={clsx(
+          hasDownvoted ? "text-violet-600" : "text-zinc-700",
+          "disabled:text-zinc-500"
+        )}
       >
         <TriangleDownIcon aria-hidden="true" width={iconDimension} height={iconDimension} />
       </button>

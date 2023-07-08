@@ -65,7 +65,7 @@ const AppLayout = (): JSX.Element => {
         </div>
       </header>
       <Separator.Root className="h-px w-full bg-zinc-200" />
-      <main className="my-8 px-8">
+      <main className="p-8">
         <Outlet />
       </main>
     </div>
@@ -94,17 +94,17 @@ const Drawer = ({ isAuthenticated }: { isAuthenticated: boolean }): JSX.Element 
               <XMarkIcon aria-hidden="true" className="aspect-square w-8" />
             </Dialog.Close>
           </div>
-          {isAuthenticated && (
+          {!isAuthenticated && (
             <div className="flex w-full flex-col gap-4 bg-gray-100 p-4">
               <Link
                 to="/auth/login"
-                className="inlined-flex py-2 text-center text-sm ring-1 ring-black"
+                className="inline-flex justify-center  rounded-sm px-3 py-2 text-center text-sm ring-1 ring-zinc-400"
               >
                 Log in
               </Link>
               <Link
                 to="/auth/register"
-                className="inlined-flex bg-black py-2 text-center text-sm text-white"
+                className="inline-flex justify-center rounded-sm bg-violet-700 px-3 py-2 text-center text-sm text-white ring-1 ring-violet-700"
               >
                 Create an account
               </Link>
