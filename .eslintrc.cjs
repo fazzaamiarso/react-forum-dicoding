@@ -6,7 +6,7 @@ module.exports = {
     "plugin:react-hooks/recommended",
     "prettier",
   ],
-  ignorePatterns: [".eslintrc.*", "vite.config.ts", "tailwind.*"],
+  ignorePatterns: [".eslintrc.*", "vite.config.ts", "tailwind.*", "vitest.*"],
   parser: "@typescript-eslint/parser",
   parserOptions: {
     ecmaVersion: "latest",
