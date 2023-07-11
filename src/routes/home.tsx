@@ -103,13 +103,16 @@ const ThreadItem = ({
         <div className="space-y-4">
           <h3 className="text-lg font-semibold">
             <Link
+              data-testid="thread-link"
               to={`threads/${id}`}
               className="line-clamp-2 break-all transition-colors hover:text-violet-500"
             >
               {title}
             </Link>
           </h3>
-          <span className="px-1 text-xs">#{category}</span>
+          <span data-testid="thread-category" className="px-1 text-xs">
+            #{category}
+          </span>
           <div className="line-clamp-6 text-sm">{parse(body)}</div>
           <div>
             <div className="flex items-center gap-1 text-sm ">

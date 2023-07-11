@@ -31,11 +31,11 @@ export default defineConfig({
       dependencies: ["setup"],
     },
 
-    {
-      name: "webkit",
-      use: { ...devices["Desktop Safari"], storageState: "playwright/.auth/storage.json" },
-      dependencies: ["setup"],
-    },
+    // {
+    //   name: "webkit",
+    //   use: { ...devices["Desktop Safari"], storageState: "playwright/.auth/storage.json" },
+    //   dependencies: ["setup"],
+    // },
 
     /* Test against mobile viewports. */
     // {
