@@ -36,14 +36,16 @@ export const VoteButton = ({
   return (
     <div className="flex flex-col items-center">
       <button
+        data-testid="upvote"
         disabled={hasDownvoted}
         onClick={onUpvote}
         className={clsx(hasUpvoted ? "text-violet-600" : "text-zinc-700", "disabled:text-zinc-500")}
       >
         <TriangleUpIcon aria-hidden="true" width={iconDimension} height={iconDimension} />
       </button>
-      <div>{upVotes - downVotes}</div>
+      <div data-testid="vote-count">{upVotes - downVotes}</div>
       <button
+        data-testid="downvote"
         disabled={hasUpvoted}
         onClick={onDownvote}
         className={clsx(

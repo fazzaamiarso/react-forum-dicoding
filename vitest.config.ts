@@ -3,8 +3,8 @@ import path from "path";
 
 export default defineConfig({
   test: {
-    include: ["src/**/*.{test,spec}.{ts,js}"],
-    setupFiles: ["src/mocks/msw/server.ts"],
+    include: ["src/**/*.{test,spec}.{ts,js,tsx}"],
+    setupFiles: ["src/mocks/msw/server.ts", "src/utils/test-setup.ts"],
   },
   resolve: {
     alias: {

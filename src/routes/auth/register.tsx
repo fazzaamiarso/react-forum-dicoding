@@ -15,11 +15,6 @@ const Register = (): JSX.Element => {
   const navigate = useNavigate();
   const [registerUser] = useRegisterMutation();
   const [loginUser] = useLoginMutation();
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm<FormData>();
 
   const onSubmit: SubmitHandler<FormData> = async (data) => {
     try {
@@ -42,42 +37,7 @@ const Register = (): JSX.Element => {
         </div>
 
         <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
-          <form className="space-y-6" onSubmit={handleSubmit(onSubmit)}>
-            <TextField
-              label="Name"
-              id="name"
-              autoComplete="off"
-              {...register("name", { required: "Name can't be empty!" })}
-              error={errors.name?.message}
-            />
-            <TextField
-              {...register("email", {
-                required: "Email can't be empty!",
-              })}
-              type="email"
-              label="Email"
-              id="email"
-              autoComplete="email"
-              error={errors.email?.message}
-            />
-            <TextField
-              {...register("password", {
-                required: "Password can't be empty!",
-                minLength: { value: 6, message: "Password must be at least 6 characters" },
-              })}
-              label="Password"
-              type="password"
-              autoComplete="current-password"
-              id="password"
-              error={errors.password?.message}
-            />
-            <button
-              type="submit"
-              className="flex w-full justify-center rounded-md bg-violet-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-violet-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-            >
-              Register
-            </button>
-          </form>
+          <RegisterForm onSubmit={onSubmit} />
 
           <p className="mt-10 text-center text-sm text-gray-500">
             Already have an account?{" "}
@@ -95,3 +55,57 @@ const Register = (): JSX.Element => {
 };
 
 export default Register;
+
+interface RegisterFormProps {
+  onSubmit: SubmitHandler<FormData>;
+}
+export const RegisterForm = ({ onSubmit }: RegisterFormProps): JSX.Element => {
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<FormData>();
+
+  return (
+    <form className="space-y-6" onSubmit={handleSubmit(onSubmit)}>
+      <TextField
+        label="Name"
+        id="name"
+        autoComplete="off"
+        {...register("name", { required: "Name can't be empty!" })}
+        error={errors.name?.message}
+      />
+      <TextField
+        {...register("email", {
+          required: "Email can't be empty!",
+          validate: {
+            matchPattern: (v) =>
+              /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/.test(v) ||
+              "Email address must be a valid address",
+          },
+        })}
+        label="Email"
+        id="email"
+        autoComplete="email"
+        error={errors.email?.message}
+      />
+      <TextField
+        {...register("password", {
+          required: "Password can't be empty!",
+          minLength: { value: 6, message: "Password must be at least 6 characters" },
+        })}
+        label="Password"
+        type="password"
+        autoComplete="current-password"
+        id="password"
+        error={errors.password?.message}
+      />
+      <button
+        type="submit"
+        className="flex w-full justify-center rounded-md bg-violet-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-violet-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+      >
+        Register
+      </button>
+    </form>
+  );
+};

@@ -97,7 +97,7 @@ const CommentItem = ({
   const hasDownvoted = user?.id === undefined ? false : downVotesBy.includes(user.id);
 
   return (
-    <li className="space-y-4">
+    <li data-testid="comment-item" className="space-y-4">
       <div className="flex items-center gap-4">
         <UserAvatar imgSrc={owner.avatar} name={owner.name} size="sm" />
         <div className="flex items-center gap-2">

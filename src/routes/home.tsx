@@ -84,7 +84,10 @@ const ThreadItem = ({
   const hasDownvoted = user?.id === undefined ? false : downVotesBy.includes(user.id);
 
   return (
-    <li className="space-y-5 rounded-sm bg-zinc-50 p-4 shadow-sm ring-1 ring-gray-200">
+    <li
+      data-testid="thread-item"
+      className="space-y-5 rounded-sm bg-zinc-50 p-4 shadow-sm ring-1 ring-gray-200"
+    >
       <div className="mb-4 flex items-center gap-2">
         <UserAvatar imgSrc={owner.avatar} name={owner.name} size="sm" />
         <div className="text-xs font-semibold text-violet-600">{owner.name}</div>
