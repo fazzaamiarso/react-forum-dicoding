@@ -18,6 +18,7 @@ export const VoteButton = ({
   hasUpvoted,
 }: Props): JSX.Element => {
   const iconDimension = 28;
+
   const onUpvote = async (): Promise<void> => {
     if (hasUpvoted) {
       await updateVote("neutral-vote");
