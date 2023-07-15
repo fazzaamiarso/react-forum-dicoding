@@ -4,23 +4,10 @@ import Home from "../home";
 import { screen, waitFor } from "@testing-library/react";
 import { server } from "@/mocks/msw/server";
 import { rest } from "msw";
-import { RouterProvider, createMemoryRouter } from "react-router-dom";
 
 // @vitest-environment jsdom
 describe("Home", () => {
   test("should fetch and display threads", async () => {
-    const routes = [
-      {
-        path: "/",
-        element: <Home />,
-      },
-    ];
-
-    const router = createMemoryRouter(routes, {
-      initialEntries: ["/"],
-      initialIndex: 0,
-    });
-
     server.use(
       rest.get("https://forum-api.dicoding.dev/v1/threads", async (_req, res, ctx) => {
         return await res(
@@ -57,7 +44,7 @@ describe("Home", () => {
         );
       })
     );
-    renderWithProviders(<RouterProvider router={router} />);
+    renderWithProviders(<Home />);
 
     expect(screen.getByText(/Loading threads../i)).toBeInTheDocument();
     expect(screen.queryAllByTestId("thread-item").length).toEqual(0);
@@ -69,24 +56,12 @@ describe("Home", () => {
   });
 
   test("should display error when request fails", async () => {
-    const routes = [
-      {
-        path: "/",
-        element: <Home />,
-      },
-    ];
-
-    const router = createMemoryRouter(routes, {
-      initialEntries: ["/"],
-      initialIndex: 0,
-    });
-
     server.use(
       rest.get("https://forum-api.dicoding.dev/v1/threads", async (_req, res, ctx) => {
         return await res(ctx.status(500), ctx.delay(), ctx.json("Something went wrong!"));
       })
     );
-    renderWithProviders(<RouterProvider router={router} />);
+    renderWithProviders(<Home />);
 
     expect(screen.getByText(/loading threads/i)).toBeInTheDocument();
     expect(screen.queryAllByTestId("thread-item").length).toEqual(0);

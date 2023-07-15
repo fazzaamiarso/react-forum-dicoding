@@ -4,6 +4,7 @@ import type { RenderOptions } from "@testing-library/react";
 import type { PreloadedState } from "@reduxjs/toolkit";
 import { type AppStore, type RootState, setupStore } from "@/store";
 import { Provider } from "react-redux";
+import { RouterProvider, createMemoryRouter } from "react-router-dom";
 
 // This type interface extends the default options for render from RTL, as well
 // as allows the user to specify other things such as initialState, store.
@@ -22,9 +23,18 @@ export function renderWithProviders(
     ...renderOptions
   }: ExtendedRenderOptions = {}
 ) {
+  // For now, only capable of rendering an element
+  const router = createMemoryRouter([{ path: "/", element: ui }], {
+    initialEntries: ["/"],
+    initialIndex: 0,
+  });
+
   const Wrapper = ({ children }: PropsWithChildren<unknown>): JSX.Element => {
     return <Provider store={store}>{children}</Provider>;
   };
 
-  return { store, ...render(ui, { wrapper: Wrapper, ...renderOptions }) };
+  return {
+    store,
+    ...render(<RouterProvider router={router} />, { wrapper: Wrapper, ...renderOptions }),
+  };
 }
