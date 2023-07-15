@@ -16,6 +16,7 @@ interface ExtendedRenderOptions extends Omit<RenderOptions, "queries"> {
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 export function renderWithProviders(
   ui: React.ReactElement,
+  routerOpts?: { path: string; initialPath: string },
   {
     preloadedState = {},
     // Automatically create a store instance if no store was passed in
@@ -24,8 +25,8 @@ export function renderWithProviders(
   }: ExtendedRenderOptions = {}
 ) {
   // For now, only capable of rendering an element
-  const router = createMemoryRouter([{ path: "/", element: ui }], {
-    initialEntries: ["/"],
+  const router = createMemoryRouter([{ path: routerOpts?.path ?? "/", element: ui }], {
+    initialEntries: [routerOpts?.initialPath ?? "/"],
     initialIndex: 0,
   });
 

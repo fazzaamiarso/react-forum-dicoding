@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/explicit-function-return-type */
 import { forumAPI, renderWithProviders } from "@/utils/test/test-utils";
 import { describe, test, expect } from "vitest";
 import { screen } from "@testing-library/react";
@@ -7,18 +6,7 @@ import { rest } from "msw";
 import userEvent from "@testing-library/user-event";
 import Leaderboard from "../leaderboards";
 import { faker } from "@faker-js/faker";
-
-const createLeaderboardItem = () => {
-  return {
-    user: {
-      id: faker.string.uuid(),
-      name: faker.person.fullName(),
-      email: faker.internet.email(),
-      avatar: "",
-    },
-    score: faker.number.int(50),
-  };
-};
+import { createLeaderboardItem } from "./utils";
 
 // @vitest-environment jsdom
 describe("Leaderboard", () => {

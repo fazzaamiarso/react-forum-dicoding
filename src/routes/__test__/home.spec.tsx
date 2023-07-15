@@ -5,21 +5,7 @@ import { screen } from "@testing-library/react";
 import { server } from "@/mocks/msw/server";
 import { rest } from "msw";
 import { faker } from "@faker-js/faker";
-
-// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-const createThreadItem = () => {
-  return {
-    id: faker.string.uuid(),
-    title: faker.word.words(),
-    body: faker.lorem.sentences(),
-    category: faker.company.buzzNoun(),
-    createdAt: faker.date.anytime(),
-    ownerId: faker.string.uuid(),
-    upVotesBy: faker.helpers.multiple(faker.string.uuid),
-    downVotesBy: faker.helpers.multiple(faker.string.uuid),
-    totalComments: faker.number.int(100),
-  };
-};
+import { createThreadItem } from "./utils";
 
 const THREADS_ITEM_COUNT = 5;
 
