@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
-import { renderWithProviders } from "@/utils/test-utils";
+import { forumAPI, renderWithProviders } from "@/utils/test/test-utils";
 import { describe, test, expect } from "vitest";
-import { screen, waitFor } from "@testing-library/react";
+import { screen } from "@testing-library/react";
 import { server } from "@/mocks/msw/server";
 import { rest } from "msw";
 import userEvent from "@testing-library/user-event";
@@ -24,30 +24,26 @@ const createLeaderboardItem = () => {
 describe("Leaderboard", () => {
   test("should fetch and display leaderboard", async () => {
     server.use(
-      rest.get("https://forum-api.dicoding.dev/v1/leaderboards", async (_req, res, ctx) => {
+      rest.get(forumAPI("leaderboards"), async (_req, res, ctx) => {
         return await res(
           ctx.status(200),
           ctx.delay(),
           ctx.json({
-            data: {
-              leaderboards: faker.helpers.multiple(createLeaderboardItem, { count: 10 }),
-            },
+            data: { leaderboards: faker.helpers.multiple(createLeaderboardItem, { count: 10 }) },
           })
         );
       })
     );
     renderWithProviders(<Leaderboard />);
 
-    await waitFor(() => {
-      expect(screen.getAllByTestId("leaderboard-item")).toHaveLength(10);
-    });
+    expect(await screen.findAllByTestId("leaderboard-item")).toHaveLength(10);
   });
 
   test("should refetch and display with fresh data", async () => {
     const user = userEvent.setup();
 
     server.use(
-      rest.get("https://forum-api.dicoding.dev/v1/leaderboards", async (_req, res, ctx) => {
+      rest.get(forumAPI("leaderboards"), async (_req, res, ctx) => {
         return await res(
           ctx.status(200),
           ctx.delay(),
@@ -61,24 +57,19 @@ describe("Leaderboard", () => {
     );
     renderWithProviders(<Leaderboard />);
 
-    let initialCustomerName: string | undefined = "";
-    await waitFor(() => {
-      initialCustomerName = screen.getAllByTestId("leaderboard-item-name").at(0)?.textContent;
-    });
+    const initialCustomerName = (await screen.findAllByTestId("leaderboard-item-name")).at(0)?.textContent;
 
     await user.click(screen.getByRole("button", { name: /refresh/i }));
     expect(screen.getByTestId("leaderboard-loading")).toBeInTheDocument();
 
-    const newCustomerName = (await screen.findAllByTestId("leaderboard-item-name")).at(
-      0
-    )?.textContent;
+    const newCustomerName = (await screen.findAllByTestId("leaderboard-item-name")).at(0)?.textContent;
 
     expect(initialCustomerName).not.toEqual(newCustomerName);
   });
 
   test("should display error when request is invalid", async () => {
     server.use(
-      rest.get("https://forum-api.dicoding.dev/v1/leaderboards", async (_req, res, ctx) => {
+      rest.get(forumAPI("leaderboards"), async (_req, res, ctx) => {
         return await res(ctx.status(500), ctx.delay(), ctx.json("Something went wrong!"));
       })
     );

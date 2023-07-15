@@ -1,44 +1,39 @@
-import { renderWithProviders } from "@/utils/test-utils";
+import { forumAPI, renderWithProviders } from "@/utils/test/test-utils";
 import { describe, test, expect } from "vitest";
 import Home from "../home";
-import { screen, waitFor } from "@testing-library/react";
+import { screen } from "@testing-library/react";
 import { server } from "@/mocks/msw/server";
 import { rest } from "msw";
+import { faker } from "@faker-js/faker";
+
+// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
+const createThreadItem = () => {
+  return {
+    id: faker.string.uuid(),
+    title: faker.word.words(),
+    body: faker.lorem.sentences(),
+    category: faker.company.buzzNoun(),
+    createdAt: faker.date.anytime(),
+    ownerId: faker.string.uuid(),
+    upVotesBy: faker.helpers.multiple(faker.string.uuid),
+    downVotesBy: faker.helpers.multiple(faker.string.uuid),
+    totalComments: faker.number.int(100),
+  };
+};
+
+const THREADS_ITEM_COUNT = 5;
 
 // @vitest-environment jsdom
 describe("Home", () => {
   test("should fetch and display threads", async () => {
     server.use(
-      rest.get("https://forum-api.dicoding.dev/v1/threads", async (_req, res, ctx) => {
+      rest.get(forumAPI("threads"), async (_req, res, ctx) => {
         return await res(
           ctx.status(200),
           ctx.delay(),
           ctx.json({
             data: {
-              threads: [
-                {
-                  id: "thread-1",
-                  title: "Thread Pertama",
-                  body: "Ini adalah thread pertama",
-                  category: "General",
-                  createdAt: "2021-06-21T07:00:00.000Z",
-                  ownerId: "users-1",
-                  upVotesBy: [],
-                  downVotesBy: [],
-                  totalComments: 0,
-                },
-                {
-                  id: "thread-2",
-                  title: "Thread Pertama",
-                  body: "Ini adalah thread pertama",
-                  category: "General",
-                  createdAt: "2021-06-21T07:00:00.000Z",
-                  ownerId: "users-1",
-                  upVotesBy: [],
-                  downVotesBy: [],
-                  totalComments: 0,
-                },
-              ],
+              threads: faker.helpers.multiple(createThreadItem, { count: THREADS_ITEM_COUNT }),
             },
           })
         );
@@ -46,18 +41,18 @@ describe("Home", () => {
     );
     renderWithProviders(<Home />);
 
+    // initially in loading state
     expect(screen.getByText(/Loading threads../i)).toBeInTheDocument();
     expect(screen.queryAllByTestId("thread-item").length).toEqual(0);
 
-    await waitFor(async () => {
-      expect(screen.getAllByTestId("thread-item")).toHaveLength(2);
-      expect(screen.queryByText(/Loading threads../i)).not.toBeInTheDocument();
-    });
+    // fetch has finished and render threads
+    expect(await screen.findAllByTestId("thread-item")).toHaveLength(THREADS_ITEM_COUNT);
+    expect(screen.queryByText(/Loading threads../i)).not.toBeInTheDocument();
   });
 
   test("should display error when request fails", async () => {
     server.use(
-      rest.get("https://forum-api.dicoding.dev/v1/threads", async (_req, res, ctx) => {
+      rest.get(forumAPI("threads"), async (_req, res, ctx) => {
         return await res(ctx.status(500), ctx.delay(), ctx.json("Something went wrong!"));
       })
     );
@@ -66,8 +61,6 @@ describe("Home", () => {
     expect(screen.getByText(/loading threads/i)).toBeInTheDocument();
     expect(screen.queryAllByTestId("thread-item").length).toEqual(0);
 
-    await waitFor(async () => {
-      expect(screen.queryByText(/something went wrong while fetching data/i)).toBeInTheDocument();
-    });
+    expect(await screen.findByText(/something went wrong while fetching data/i)).toBeInTheDocument();
   });
 });
