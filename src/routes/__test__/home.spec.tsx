@@ -63,7 +63,7 @@ describe("Home", () => {
     expect(screen.queryAllByTestId("thread-item").length).toEqual(0);
 
     await waitFor(async () => {
-      expect((await screen.findAllByTestId("thread-item")).length).toEqual(2);
+      expect(screen.getAllByTestId("thread-item")).toHaveLength(2);
       expect(screen.queryByText(/Loading threads../i)).not.toBeInTheDocument();
     });
   });
