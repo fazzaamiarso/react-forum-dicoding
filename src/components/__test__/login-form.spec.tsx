@@ -1,8 +1,8 @@
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { describe, expect, test, vi } from "vitest";
-import { LoginForm } from "../auth/login";
 import { faker } from "@faker-js/faker";
+import LoginForm from "../auth/login-form";
 
 const mockOnSubmit = vi.fn();
 

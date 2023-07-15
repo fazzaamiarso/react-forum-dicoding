@@ -2,11 +2,9 @@ import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { describe, expect, test, vi } from "vitest";
 import { faker } from "@faker-js/faker";
-import { RegisterForm } from "../auth/register";
+import RegisterForm from "../auth/register-form";
 
-const mockOnSubmit = vi.fn(async () => {
-  await Promise.resolve();
-});
+const mockOnSubmit = vi.fn();
 
 const credentials = {
   name: faker.internet.userName(),
