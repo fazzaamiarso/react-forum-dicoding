@@ -26,7 +26,11 @@ const TextArea = React.forwardRef<HTMLTextAreaElement, TextAreaProps>(
           name={name}
           className={clsx("w-full resize-y rounded-sm border-zinc-400", className)}
         />
-        {error !== undefined && <p className="text-xs text-red-500">{error}</p>}
+        {error !== undefined && (
+          <p role="alert" className="text-xs text-red-500">
+            {error}
+          </p>
+        )}
       </div>
     );
   }

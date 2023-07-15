@@ -3,19 +3,16 @@ import { useGetThreadByIdQuery } from "@/services/api/thread";
 import parse from "html-react-parser";
 import { useParams } from "react-router-dom";
 import { UserAvatar } from "@/components/user-avatar";
-import { VoteButton } from "@/components/vote-button";
-import { type SubmitHandler, useForm } from "react-hook-form";
-import { useCreateCommentMutation, useUpdateVoteCommentMutation } from "@/services/api/comment";
-import type { Comment } from "@/types";
-import { useAuth } from "@/hooks/useAuth";
 import dayjs from "@/utils/date-formatter";
 import { FaceFrownIcon } from "@heroicons/react/24/solid";
 import * as Separator from "@radix-ui/react-separator";
-import TextArea from "@/components/textarea";
 import { skipToken } from "@reduxjs/toolkit/dist/query";
 import NotFound from "../404";
+import CommentItem from "@/components/thread-detail/comment-item";
+import CommentForm from "@/components/thread-detail/comment-form";
+import { useCreateCommentMutation } from "@/services/api/comment";
 
-interface FormData {
+export interface CommentMutationInput {
   content: string;
   threadId: string;
 }
@@ -23,9 +20,15 @@ interface FormData {
 const ThreadDetail = (): JSX.Element => {
   const { threadId } = useParams();
   if (threadId === undefined) throw Error("threadId not found");
+
+  const [createComment] = useCreateCommentMutation();
   const { data } = useGetThreadByIdQuery(threadId ?? skipToken);
 
   if (data === undefined) return <NotFound />;
+
+  const onAddComment = async (data: CommentMutationInput): Promise<void> => {
+    await createComment(data);
+  };
 
   return (
     <div className="my-12 space-y-8">
@@ -70,7 +73,7 @@ const ThreadDetail = (): JSX.Element => {
             );
           })}
         </ul>
-        <CommentForm threadId={threadId} />
+        <CommentForm threadId={threadId} onSubmit={onAddComment} />
       </section>
     </div>
   );
@@ -78,72 +81,4 @@ const ThreadDetail = (): JSX.Element => {
 
 export default ThreadDetail;
 
-interface CommentItemProps extends Comment {
-  threadId: string;
-}
-const CommentItem = ({
-  id,
-  owner,
-  createdAt,
-  upVotesBy,
-  downVotesBy,
-  content,
-  threadId,
-}: CommentItemProps): JSX.Element => {
-  const { user } = useAuth();
-  const [updateVote] = useUpdateVoteCommentMutation();
 
-  const hasUpvoted = user?.id === undefined ? false : upVotesBy.includes(user.id);
-  const hasDownvoted = user?.id === undefined ? false : downVotesBy.includes(user.id);
-
-  return (
-    <li data-testid="comment-item" className="space-y-4">
-      <div className="flex items-center gap-4">
-        <UserAvatar imgSrc={owner.avatar} name={owner.name} size="sm" />
-        <div className="flex items-center gap-2">
-          <h4 className="text-sm font-semibold text-violet-600">{owner.name}</h4>
-          <span className="text-xs">{dayjs(createdAt).fromNow()}</span>
-        </div>
-      </div>
-      <div className="flex items-start gap-4">
-        <VoteButton
-          hasUpvoted={hasUpvoted}
-          hasDownvoted={hasDownvoted}
-          upVotes={upVotesBy.length}
-          downVotes={downVotesBy.length}
-          updateVote={async (type) => {
-            await updateVote({ threadId, type, commentId: id });
-          }}
-        />
-        <div className="">{parse(content)}</div>
-      </div>
-      <Separator.Root className="h-px w-full bg-zinc-200" />
-    </li>
-  );
-};
-
-const CommentForm = ({ threadId }: { threadId: string }): JSX.Element => {
-  const [createComment] = useCreateCommentMutation();
-  const { register, handleSubmit, resetField } = useForm<FormData>({ defaultValues: { threadId } });
-
-  const onSubmit: SubmitHandler<FormData> = async (data) => {
-    await createComment(data);
-    resetField("content");
-  };
-
-  return (
-    <form onSubmit={handleSubmit(onSubmit)} className="space-y-2">
-      <input type="hidden" {...register("threadId")} />
-      <TextArea
-        {...register("content", { required: true })}
-        label="Add Comment"
-        id="content"
-        rows={5}
-        className="rounded-sm border-zinc-300 bg-zinc-100"
-      />
-      <button className="rounded-sm bg-violet-600 p-2 text-sm text-white transition-colors hover:bg-violet-500">
-        Submit
-      </button>
-    </form>
-  );
-};

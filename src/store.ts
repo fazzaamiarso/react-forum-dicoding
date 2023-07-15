@@ -3,11 +3,13 @@ import authSlice from "./services/authSlice";
 import loadingSlice from "./services/loadingSlice";
 import { listenerMiddleware } from "./services/listenerMiddleware";
 import { baseApi } from "./services/api/base";
+import { threadApi } from "./services/api/thread";
 
 const reducers = combineReducers({
   auth: authSlice,
   loading: loadingSlice,
   [baseApi.reducerPath]: baseApi.reducer,
+  [threadApi.reducerPath]: threadApi.reducer,
 });
 
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type

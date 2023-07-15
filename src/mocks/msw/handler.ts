@@ -13,4 +13,7 @@ export const handlers = [
   rest.get(`${BASE_URL}users/me`, async (_req, res, ctx) => {
     return await res(ctx.status(200), ctx.json({ data: { user: fakeUser } }));
   }),
+  rest.get(`${BASE_URL}users`, async (_req, res, ctx) => {
+    return await res(ctx.status(200), ctx.json({ data: { users: [] } }));
+  }),
 ];

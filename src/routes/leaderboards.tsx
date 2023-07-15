@@ -12,7 +12,8 @@ const standingsStyleMap = new Map([
 ]);
 
 const Leaderboard = (): JSX.Element => {
-  const { data, refetch, fulfilledTimeStamp } = useGetLeaderboardsQuery();
+  const { data, refetch, fulfilledTimeStamp, isLoading, isFetching, isError } =
+    useGetLeaderboardsQuery();
   return (
     <div className="space-y-8">
       <div className="flex items-center justify-between">
@@ -27,35 +28,48 @@ const Leaderboard = (): JSX.Element => {
         </button>
       </div>
       <ul>
-        {data?.map((ranker, idx) => {
-          const standings = idx + 1;
-          return (
-            <li key={ranker.user.id} className="mb-4 space-y-4">
-              <div className="flex items-center gap-8">
-                <div className="flex items-center gap-3">
-                  <div
-                    className={clsx(
-                      "flex aspect-square w-8 items-center justify-center rounded-full",
-                      standingsStyleMap.get(standings)
-                    )}
-                  >
-                    {standings}
+        {isError && (
+          <p data-testid="leaderboard-error">
+            Something went wrong when fetching your data! Please try again by refreshing!
+          </p>
+        )}
+        {isLoading ||
+          (isFetching && <p data-testid="leaderboard-loading">loading leaderboard...</p>)}
+        {!isFetching &&
+          data?.map((ranker, idx) => {
+            const standings = idx + 1;
+            return (
+              <li key={ranker.user.id} className="mb-4 space-y-4" data-testid="leaderboard-item">
+                <div className="flex items-center gap-8">
+                  <div className="flex items-center gap-3">
+                    <div
+                      className={clsx(
+                        "flex aspect-square w-8 items-center justify-center rounded-full",
+                        standingsStyleMap.get(standings)
+                      )}
+                    >
+                      {standings}
+                    </div>
+                    <Separator.Root
+                      className="bg-gray-300 data-[orientation=vertical]:h-8 data-[orientation=vertical]:w-px"
+                      orientation="vertical"
+                    />
                   </div>
-                  <Separator.Root
-                    className="bg-gray-300 data-[orientation=vertical]:h-8 data-[orientation=vertical]:w-px"
-                    orientation="vertical"
-                  />
+                  <div className="flex items-center gap-4">
+                    <UserAvatar imgSrc={ranker.user.avatar} name={ranker.user.name} />
+                    <h3
+                      data-testid="leaderboard-item-name"
+                      className="text-sm font-normal sm:text-base"
+                    >
+                      {ranker.user.name}
+                    </h3>
+                  </div>
+                  <div className="ml-auto text-sm sm:text-base">{ranker.score}</div>
                 </div>
-                <div className="flex items-center gap-4">
-                  <UserAvatar imgSrc={ranker.user.avatar} name={ranker.user.name} />
-                  <h3 className="text-sm font-normal sm:text-base">{ranker.user.name}</h3>
-                </div>
-                <div className="ml-auto text-sm sm:text-base">{ranker.score}</div>
-              </div>
-              <Separator.Root className="h-px w-full bg-gray-200" />
-            </li>
-          );
-        })}
+                <Separator.Root className="h-px w-full bg-gray-200" />
+              </li>
+            );
+          })}
       </ul>
     </div>
   );

@@ -13,10 +13,14 @@ import dayjs from "@/utils/date-formatter";
 
 const Home = (): JSX.Element => {
   const [selectedCategory, setSelectedCategory] = useState<string>("");
-  const { threads, categories } = useGetAllThreadsQuery(undefined, {
+  const {
+    data: { threads, categories },
+    isLoading,
+    isError,
+  } = useGetAllThreadsQuery(undefined, {
     selectFromResult: (result) => {
-      const categories = result.data?.map((thread) => thread.category) ?? [];
-      return { threads: result.data, categories };
+      const categories = [...new Set(result.data?.map((thread) => thread.category))] ?? [];
+      return { ...result, data: { threads: result.data, categories } };
     },
   });
 
@@ -59,6 +63,8 @@ const Home = (): JSX.Element => {
             return <ThreadItem key={thread.id} {...thread} />;
           })}
         </ul>
+        {isLoading && <p data-testid="loading-threads">Loading threads...</p>}
+        {isError && <p data-testid="error-threads">Something went wrong while fetching data...</p>}
       </div>
     </div>
   );
@@ -89,8 +95,8 @@ const ThreadItem = ({
       className="space-y-5 rounded-sm bg-zinc-50 p-4 shadow-sm ring-1 ring-gray-200"
     >
       <div className="mb-4 flex items-center gap-2">
-        <UserAvatar imgSrc={owner.avatar} name={owner.name} size="sm" />
-        <div className="text-xs font-semibold text-violet-600">{owner.name}</div>
+        <UserAvatar imgSrc={owner?.avatar} name={owner?.name} size="sm" />
+        <div className="text-xs font-semibold text-violet-600">{owner?.name}</div>
         <div className="text-xs">{dayjs(createdAt).fromNow()}</div>
       </div>
       <div className="flex w-full gap-4">

@@ -4,9 +4,7 @@ import { describe, expect, test, vi } from "vitest";
 import { LoginForm } from "../auth/login";
 import { faker } from "@faker-js/faker";
 
-const mockOnSubmit = vi.fn(async () => {
-  await Promise.resolve();
-});
+const mockOnSubmit = vi.fn();
 
 const credentials = {
   email: faker.internet.email(),

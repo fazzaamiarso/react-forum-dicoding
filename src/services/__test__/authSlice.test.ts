@@ -9,8 +9,7 @@ describe("Auth Reducers", () => {
   });
 
   test("should be able to reset auth state", async () => {
-    // note: mongoDBObjectId just for stubbing out string
-    expect(reducer({ token: faker.database.mongodbObjectId(), user: null }, logout())).toEqual({
+    expect(reducer({ token: faker.string.uuid(), user: null }, logout())).toEqual({
       token: null,
       user: null,
     });
