@@ -3,6 +3,7 @@ import * as ToggleGroup from "@radix-ui/react-toggle-group";
 import clsx from "clsx";
 import { useState } from "react";
 import ThreadItem from "@/components/thread-item";
+import { ErrorState, LoadingState } from "@/components/states-ui";
 
 const Home = (): JSX.Element => {
   const [selectedCategory, setSelectedCategory] = useState<string>("");
@@ -56,8 +57,8 @@ const Home = (): JSX.Element => {
             return <ThreadItem key={thread.id} {...thread} />;
           })}
         </ul>
-        {isLoading && <p data-testid="loading-threads">Loading threads...</p>}
-        {isError && <p data-testid="error-threads">Something went wrong while fetching data...</p>}
+        {isLoading && <LoadingState text="Loading threads...s" />}
+        {isError && <ErrorState text="Something went wrong while fetching data..." />}
       </div>
     </div>
   );

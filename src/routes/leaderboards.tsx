@@ -4,6 +4,7 @@ import { useGetLeaderboardsQuery } from "@/services/api/leaderboards";
 import clsx from "clsx";
 import { UserAvatar } from "@/components/user-avatar";
 import dayjs from "@/utils/date-formatter";
+import { ErrorState, LoadingState } from "@/components/states-ui";
 
 const standingsStyleMap = new Map([
   [1, "bg-[#FFD700] font-semibold"],
@@ -12,29 +13,21 @@ const standingsStyleMap = new Map([
 ]);
 
 const Leaderboard = (): JSX.Element => {
-  const { data, refetch, fulfilledTimeStamp, isLoading, isFetching, isError } =
-    useGetLeaderboardsQuery();
+  const { data, refetch, fulfilledTimeStamp, isLoading, isFetching, isError } = useGetLeaderboardsQuery();
   return (
     <div className="space-y-8">
       <div className="flex items-center justify-between">
         <div>
           <h2 className="text-2xl">Leaderboards</h2>
-          <span className="text-xs">
-            Last updated: {dayjs.tz(fulfilledTimeStamp, "Asia/Jakarta").toString()}
-          </span>
+          <span className="text-xs">Last updated: {dayjs.tz(fulfilledTimeStamp, "Asia/Jakarta").toString()}</span>
         </div>
         <button className="rounded-sm p-1 text-sm ring-1 ring-black" onClick={refetch}>
           Refresh
         </button>
       </div>
       <ul>
-        {isError && (
-          <p data-testid="leaderboard-error">
-            Something went wrong when fetching your data! Please try again by refreshing!
-          </p>
-        )}
-        {isLoading ||
-          (isFetching && <p data-testid="leaderboard-loading">loading leaderboard...</p>)}
+        {isError && <ErrorState text="Something went wrong when fetching your data! Please try again by refreshing!" />}
+        {(isLoading || isFetching) && <LoadingState text="Loading leaderboards..." />}
         {!isFetching &&
           data?.map((ranker, idx) => {
             const standings = idx + 1;
@@ -57,10 +50,7 @@ const Leaderboard = (): JSX.Element => {
                   </div>
                   <div className="flex items-center gap-4">
                     <UserAvatar imgSrc={ranker.user.avatar} name={ranker.user.name} />
-                    <h3
-                      data-testid="leaderboard-item-name"
-                      className="text-sm font-normal sm:text-base"
-                    >
+                    <h3 data-testid="leaderboard-item-name" className="text-sm font-normal sm:text-base">
                       {ranker.user.name}
                     </h3>
                   </div>

@@ -10,6 +10,7 @@ import { skipToken } from "@reduxjs/toolkit/dist/query";
 import CommentItem from "@/components/thread-detail/comment-item";
 import CommentForm from "@/components/thread-detail/comment-form";
 import { useCreateCommentMutation } from "@/services/api/comment";
+import { ErrorState, LoadingState } from "@/components/states-ui";
 
 export interface CommentMutationInput {
   content: string;
@@ -29,8 +30,8 @@ const ThreadDetail = (): JSX.Element => {
 
   return (
     <div className="my-12 space-y-8">
-      {isError && <p>Something went wrong...</p>}
-      {isLoading && <p>Loading data...</p>}
+      {isError && <ErrorState />}
+      {isLoading && <LoadingState />}
       {isSuccess && (
         <div className="mb-8">
           <div className="mb-4 flex items-center gap-2">

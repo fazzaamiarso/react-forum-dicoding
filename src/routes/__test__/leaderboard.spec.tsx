@@ -10,6 +10,9 @@ import { createLeaderboardItem } from "./utils";
 
 // @vitest-environment jsdom
 describe("Leaderboard", () => {
+  const errorStateRegex = /something went wrong when fetching your data! Please try again by refreshing/i;
+  const loadingStateRegex = /loading leaderboard/i;
+
   test("should fetch and display leaderboard", async () => {
     server.use(
       rest.get(forumAPI("leaderboards"), async (_req, res, ctx) => {
@@ -24,10 +27,11 @@ describe("Leaderboard", () => {
     );
     renderWithProviders(<Leaderboard />);
 
+    expect(screen.getByText(loadingStateRegex)).toBeInTheDocument();
     expect(await screen.findAllByTestId("leaderboard-item")).toHaveLength(10);
   });
 
-  test("should refetch and display with fresh data", async () => {
+  test("should refetch and display fresh data", async () => {
     const user = userEvent.setup();
 
     server.use(
@@ -43,12 +47,14 @@ describe("Leaderboard", () => {
         );
       })
     );
+
     renderWithProviders(<Leaderboard />);
+    expect(screen.getByText(loadingStateRegex)).toBeInTheDocument();
 
     const initialCustomerName = (await screen.findAllByTestId("leaderboard-item-name")).at(0)?.textContent;
 
     await user.click(screen.getByRole("button", { name: /refresh/i }));
-    expect(screen.getByTestId("leaderboard-loading")).toBeInTheDocument();
+    expect(screen.getByText(loadingStateRegex)).toBeInTheDocument();
 
     const newCustomerName = (await screen.findAllByTestId("leaderboard-item-name")).at(0)?.textContent;
 
@@ -63,6 +69,7 @@ describe("Leaderboard", () => {
     );
     renderWithProviders(<Leaderboard />);
 
-    expect(await screen.findByTestId("leaderboard-error")).toBeInTheDocument();
+    expect(screen.getByText(loadingStateRegex)).toBeInTheDocument();
+    expect(await screen.findByText(errorStateRegex)).toBeInTheDocument();
   });
 });
