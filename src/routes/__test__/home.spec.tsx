@@ -1,11 +1,12 @@
-import { forumAPI, renderWithProviders } from "@/utils/test/test-utils";
+import { renderWithProviders } from "@/utils/test/test-utils";
 import { describe, test, expect } from "vitest";
 import Home from "../home";
 import { screen } from "@testing-library/react";
 import { server } from "@/mocks/msw/server";
 import { rest } from "msw";
 import { faker } from "@faker-js/faker";
-import { createThreadItem } from "./utils";
+import { createThreadItem } from "@/mocks/mock-data";
+import { forumAPI } from "@/utils/constants";
 
 const THREADS_ITEM_COUNT = 5;
 

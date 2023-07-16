@@ -1,4 +1,4 @@
-import { forumAPI, renderWithProviders } from "@/utils/test/test-utils";
+import { renderWithProviders } from "@/utils/test/test-utils";
 import { describe, test, expect } from "vitest";
 import { screen } from "@testing-library/react";
 import { server } from "@/mocks/msw/server";
@@ -6,7 +6,8 @@ import { rest } from "msw";
 import userEvent from "@testing-library/user-event";
 import Leaderboard from "../leaderboards";
 import { faker } from "@faker-js/faker";
-import { createLeaderboardItem } from "./utils";
+import { createLeaderboardItem } from "@/mocks/mock-data";
+import { forumAPI } from "@/utils/constants";
 
 // @vitest-environment jsdom
 describe("Leaderboard", () => {

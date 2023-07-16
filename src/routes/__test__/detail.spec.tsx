@@ -1,10 +1,11 @@
-import { forumAPI, renderWithProviders } from "@/utils/test/test-utils";
+import { renderWithProviders } from "@/utils/test/test-utils";
 import { describe, test, expect } from "vitest";
 import { screen } from "@testing-library/react";
 import { server } from "@/mocks/msw/server";
 import { rest } from "msw";
-import { createComment, createThreadDetail } from "./utils";
+import { createComment, createThreadDetail } from "@/mocks/mock-data";
 import ThreadDetail from "../thread/detail";
+import { forumAPI } from "@/utils/constants";
 
 // @vitest-environment jsdom
 describe("Thread Detail", () => {

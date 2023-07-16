@@ -1,7 +1,7 @@
 import { test, expect } from "@playwright/test";
 
 test.describe("Authentication Flow", () => {
-  test("Logout successfully!", async ({ page }) => {
+  test("should logout successfully!", async ({ page }) => {
     await page.goto("/");
     await expect(page.getByRole("heading", { level: 1, name: /giron/i })).toBeVisible();
 
@@ -10,4 +10,5 @@ test.describe("Authentication Flow", () => {
 
     await expect(page).toHaveURL("/auth/login");
   });
+
 });

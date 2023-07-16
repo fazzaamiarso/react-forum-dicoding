@@ -40,6 +40,4 @@ export function renderWithProviders(
   };
 }
 
-export const forumAPI = (path: string): string => {
-  return new URL(path, "https://forum-api.dicoding.dev/v1/").toString();
-};
+

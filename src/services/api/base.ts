@@ -1,12 +1,11 @@
 import { type RootState } from "@/store";
+import { FORUM_API_BASE_URL } from "@/utils/constants";
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
-
-const BASE_URL = "https://forum-api.dicoding.dev/v1/";
 
 export const baseApi = createApi({
   tagTypes: ["Thread"],
   baseQuery: fetchBaseQuery({
-    baseUrl: BASE_URL,
+    baseUrl: FORUM_API_BASE_URL,
     prepareHeaders: (headers, { getState }) => {
       const token = (getState() as RootState).auth.token;
       if (token !== null) {
