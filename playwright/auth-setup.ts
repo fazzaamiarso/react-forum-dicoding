@@ -1,8 +1,8 @@
 import { test as setup, expect } from "@playwright/test";
 
 const credentials = {
-  email: process.env.TEST_EMAIL ?? "",
-  password: process.env.TEST_PASSWORD ?? "",
+  email: "charisse@gmail.com",
+  password: "123456",
 };
 
 const authFile = "playwright/.auth/storage.json";

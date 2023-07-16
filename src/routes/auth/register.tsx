@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-misused-promises */
 import RegisterForm from "@/components/auth/register-form";
 import { useLoginMutation, useRegisterMutation } from "@/services/api/user";
 import toast from "react-hot-toast";
@@ -40,10 +39,7 @@ const Register = (): JSX.Element => {
 
           <p className="mt-10 text-center text-sm text-gray-500">
             Already have an account?{" "}
-            <Link
-              to="/auth/login"
-              className="font-semibold leading-6 text-violet-600 hover:text-violet-500"
-            >
+            <Link to="/auth/login" className="font-semibold leading-6 text-violet-600 hover:text-violet-500">
               Login here
             </Link>
           </p>

@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-misused-promises */
 import { useGetThreadByIdQuery } from "@/services/api/thread";
 import parse from "html-react-parser";
 import { useParams } from "react-router-dom";
@@ -81,5 +80,3 @@ const ThreadDetail = (): JSX.Element => {
 };
 
 export default ThreadDetail;
-
-

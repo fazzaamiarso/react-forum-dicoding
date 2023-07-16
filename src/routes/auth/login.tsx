@@ -1,5 +1,4 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-/* eslint-disable @typescript-eslint/no-misused-promises */
 import { useLoginMutation } from "@/services/api/user";
 import { Link, useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
@@ -36,10 +35,7 @@ const Login = (): JSX.Element => {
           <LoginForm onSubmit={onSubmit} />
           <p className="mt-10 text-center text-sm text-gray-500">
             Don't have an account?{" "}
-            <Link
-              to="/auth/register"
-              className="font-semibold leading-6 text-violet-600 hover:text-violet-500"
-            >
+            <Link to="/auth/register" className="font-semibold leading-6 text-violet-600 hover:text-violet-500">
               Register here
             </Link>
           </p>
@@ -50,4 +46,3 @@ const Login = (): JSX.Element => {
 };
 
 export default Login;
-
