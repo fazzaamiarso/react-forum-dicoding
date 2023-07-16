@@ -32,7 +32,7 @@ const TextField = React.forwardRef<HTMLInputElement, TextFieldProps>(
           name={name}
           type={type}
           aria-describedby={descriptionId}
-          className={clsx("mb-1 w-full rounded-sm border-zinc-400", className)}
+          className={clsx("mb-1 w-full rounded-sm border-zinc-400", className, error !== undefined && "border-red-500")}
         />
         {error !== undefined && (
           <p role="alert" className="text-xs text-red-500">

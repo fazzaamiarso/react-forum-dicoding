@@ -2,7 +2,7 @@ import { UserAvatar } from "@/components/user-avatar";
 import type { Meta, StoryObj } from "@storybook/react";
 
 const meta = {
-  title: "Example/UserAvatar",
+  title: "Components/UserAvatar",
   component: UserAvatar,
   tags: ["autodocs"],
 } satisfies Meta<typeof UserAvatar>;
@@ -14,8 +14,13 @@ export const Large: Story = {
   args: { size: "lg", imgSrc: "https://api.dicebear.com/6.x/adventurer-neutral/svg" },
 };
 export const Medium: Story = {
-  args: { size: "md", imgSrc: "https://api.dicebear.com/6.x/adventurer-neutral/svg" },
+  args: { ...Large.args, size: "md" },
 };
 export const Small: Story = {
-  args: { size: "sm", imgSrc: "https://api.dicebear.com/6.x/adventurer-neutral/svg" },
+  args: { ...Large.args, size: "sm" },
 };
+
+export const Fallback: Story = {
+  args: {},
+};
+
