@@ -78,6 +78,7 @@ const Drawer = ({ isAuthenticated }: { isAuthenticated: boolean }): JSX.Element 
   return (
     <Dialog.Root>
       <Dialog.Trigger className="md:hidden">
+        <span className="sr-only">open drawer</span>
         <Bars3Icon aria-hidden="true" className="aspect-square w-8" />
       </Dialog.Trigger>
       <Dialog.Portal>
@@ -138,7 +139,10 @@ const Menu = ({ triggerEl }: { triggerEl: ReactNode }): JSX.Element => {
 
   return (
     <DropdownMenu.Root>
-      <DropdownMenu.Trigger>{triggerEl}</DropdownMenu.Trigger>
+      <DropdownMenu.Trigger>
+        <span className="sr-only">open menu</span>
+        {triggerEl}
+      </DropdownMenu.Trigger>
       <DropdownMenu.Portal>
         <DropdownMenu.Content
           align="end"

@@ -5,8 +5,8 @@ import clsx from "clsx";
 type Size = "sm" | "md" | "lg";
 
 interface Props {
-  imgSrc: string;
-  name: string;
+  imgSrc?: string;
+  name?: string;
   size?: Size;
 }
 
@@ -20,7 +20,7 @@ export const UserAvatar = ({ imgSrc, name, size = "md" }: Props): JSX.Element =>
   return (
     <Avatar.Root>
       <Avatar.Image src={imgSrc} alt={name} className={clsx("rounded-full", sizeMap[size])} />
-      <Avatar.Fallback>
+      <Avatar.Fallback delayMs={100}>
         <UserCircleIcon aria-hidden="true" className={clsx(sizeMap[size])} />
       </Avatar.Fallback>
     </Avatar.Root>

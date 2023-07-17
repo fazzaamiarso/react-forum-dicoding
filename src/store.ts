@@ -1,20 +1,30 @@
-import { configureStore } from "@reduxjs/toolkit";
+import { type PreloadedState, configureStore, combineReducers } from "@reduxjs/toolkit";
 import authSlice from "./services/authSlice";
 import loadingSlice from "./services/loadingSlice";
 import { listenerMiddleware } from "./services/listenerMiddleware";
 import { baseApi } from "./services/api/base";
+import { threadApi } from "./services/api/thread";
 
-export const store = configureStore({
-  devTools: true,
-  reducer: {
-    auth: authSlice,
-    loading: loadingSlice,
-    [baseApi.reducerPath]: baseApi.reducer,
-  },
-  middleware: (getDefaultMiddleware) =>
-    getDefaultMiddleware().prepend(listenerMiddleware.middleware).concat(baseApi.middleware),
+const reducers = combineReducers({
+  auth: authSlice,
+  loading: loadingSlice,
+  [baseApi.reducerPath]: baseApi.reducer,
+  [threadApi.reducerPath]: threadApi.reducer,
 });
 
-export type RootState = ReturnType<typeof store.getState>;
+// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
+export const setupStore = (preloadedState?: PreloadedState<RootState>) => {
+  return configureStore({
+    preloadedState,
+    devTools: true,
+    reducer: reducers,
+    middleware: (getDefaultMiddleware) =>
+      getDefaultMiddleware().prepend(listenerMiddleware.middleware).concat(baseApi.middleware),
+  });
+};
 
-export type AppDispatch = typeof store.dispatch;
+export const store = setupStore();
+
+export type AppStore = ReturnType<typeof setupStore>;
+export type RootState = ReturnType<typeof reducers>;
+export type AppDispatch = AppStore["dispatch"];

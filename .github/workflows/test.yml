@@ -1,0 +1,43 @@
+name: Automation Testing
+on:
+    pull_request:
+        branches:
+            - main
+jobs: 
+    vitest:
+        name:  Vitest
+        runs-on: ubuntu-latest
+        steps:
+          - name: ⬇️ Checkout repo
+            uses: actions/checkout@v3
+    
+          - name: ⎔ Setup node
+            uses: actions/setup-node@v3
+            with:
+              node-version: 18
+    
+          - name: 📥 Download deps
+            uses: bahmutov/npm-install@v1
+      
+          - name: Run Vitest
+            run: npm run test:run
+            
+    playwright:
+        runs-on: ubuntu-latest
+        steps:
+         - name: ⬇️ Checkout repo
+           uses: actions/checkout@v3
+
+         - name: ⎔ Setup node
+           uses: actions/setup-node@v3
+           with:
+            node-version: 18
+        
+         - name: 📥 Download deps
+           uses: bahmutov/npm-install@v1
+        
+         - name: Install Playwright Browsers
+           run: npx playwright install --with-deps
+        
+         - name: Run Playwright tests
+           run: npm run e2e
